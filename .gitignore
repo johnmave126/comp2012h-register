@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+
+# sublime-text-2
+*.sublime*
+
+# build_ignore
+build_*
