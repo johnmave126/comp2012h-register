@@ -20,7 +20,7 @@ using std::endl;
 
 void term_init() {
     #ifndef WIN_TERM
-    cout << "\0337\033[47h\033[1;1H";
+    cout << "\0337\033[?47h\033[1;1H";
     #endif
     term_clr();
 }
@@ -36,6 +36,6 @@ void term_clr() {
 void term_restore() {
     term_clr();
     #ifndef WIN_TERM
-    cout << "\0338\033[47l";
+    cout << "\0338\033[?47l";
     #endif
 }
