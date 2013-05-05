@@ -10,6 +10,7 @@
  */
 
 #include "html_utility.h"
+#include "register_common.h"
 #include "bootstrap.h"
 #include "deque.h"
 #include <cstring>
