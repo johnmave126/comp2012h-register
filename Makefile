@@ -16,8 +16,9 @@ BIN_PATH=build_bin
 HEADERS = include/bootstrap.h \
 		include/html_utility.h \
 		include/deque.h \
+		include/sortlist.h \
 		include/register_common.h \
-		include/term_utility.h
+		include/term_utility.h 
 SOURCES = src/html_utility.cpp \
 		src/term_utility.cpp \
 		src/register.cpp
@@ -31,14 +32,15 @@ Register: $(OBJECTS) $(BIN_PATH)
 	$(LINK) $(LFLAGS) -o $(BIN_PATH)/Register $(OBJECTS) $(LIBS)
 
 build_tmp/html_utility.o: src/html_utility.cpp include/html_utility.h \
- include/deque.h include/bootstrap.h $(TMP_PATH)
+ include/deque.h include/bootstrap.h include/register_common.h $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/html_utility.o src/html_utility.cpp
 
-build_tmp/term_utility.o: src/term_utility.cpp include/term_utility.h $(TMP_PATH)
+build_tmp/term_utility.o: src/term_utility.cpp include/term_utility.h \
+ include/register_common.h $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/term_utility.o src/term_utility.cpp
 
-build_tmp/register.o: src/register.cpp include/term_utility.h \
- $(TMP_PATH)
+build_tmp/register.o: src/register.cpp include/term_utility.h include/register_common.h\
+ include/sortlist.h $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register.o src/register.cpp
 
 $(TMP_PATH):
