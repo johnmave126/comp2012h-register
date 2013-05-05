@@ -12,25 +12,42 @@
 #ifndef _TERM_UTILITY_H
 #define _TERM_UTILITY_H
 
-/*
- * term_init
- *
- * Init the terminal environment
- */
-void term_init();
+#include "register_common.h"
+#ifdef WIN_TERM
+#include <windows.h>
+#endif
 
-/*
- * term_clr
- *
- * Clear the screen
- */
-void term_clr();
+class Term {
+    public:
+        /* default constructor/destructor */
+        Term();
+        ~Term();
 
-/*
- * term_restore
- *
- * Restore the terminal environment
- */
-void term_restore();
+        /*
+         * init
+         *
+         * Init the terminal environment
+         */
+        void init();
+
+        /*
+         * clr
+         *
+         * Clear the screen
+         */
+        void clr();
+
+        /*
+         * restore
+         *
+         * Restore the terminal environment
+         */
+        void restore();
+
+    private:
+        #ifdef WIN_TERM
+        HANDLE hStdOut;
+        #endif
+};
 
 #endif
