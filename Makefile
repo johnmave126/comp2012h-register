@@ -1,6 +1,6 @@
 CC=gcc
-CPP=g++4
-LINK=g++4
+CPP=g++
+LINK=g++
 LFLAGS=
 LIBS=
 AR=ar
@@ -8,7 +8,7 @@ RM=rm
 CP=cp
 INCPATH=-Iinclude -I.
 CFLAGS=-O2 -Wextra -Wall -g -fexceptions -fstack-protector
-CPPFLAGS=$(CFLAGS) -std=c++0x
+CPPFLAGS=$(CFLAGS)
 
 TMP_PATH=build_tmp
 BIN_PATH=build_bin

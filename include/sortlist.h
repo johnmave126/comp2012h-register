@@ -65,11 +65,21 @@ class SortList {
         /*
          * remove
          *
+         * delete all the item meet requirement in sortlist
+         * null version, to accompany the function below
+         */
+        void remove() {
+            remove<ReturnTrue<T> >();
+        }
+
+        /*
+         * remove
+         *
          * _comp: a comparison function indicating the item to delete
          *
          * delete all the item meet requirement in sortlist
          */
-        template<class CompRemove = ReturnTrue<T> >
+        template<class CompRemove>
         void remove(const CompRemove& _comp = CompRemove());
         
         /*
