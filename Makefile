@@ -8,7 +8,7 @@ RM=rm
 CP=cp
 INCPATH=-Iinclude -I.
 CFLAGS=-O2 -Wextra -Wall -g -fexceptions -fstack-protector
-CPPFLAGS=$(CFLAGS) -std=c++0X
+CPPFLAGS=$(CFLAGS) -std=c++0x
 
 TMP_PATH=build_tmp
 BIN_PATH=build_bin
