@@ -1,6 +1,6 @@
 CC=gcc
-CPP=g++
-LINK=g++
+CPP=g++4
+LINK=g++4
 LFLAGS=
 LIBS=
 AR=ar
