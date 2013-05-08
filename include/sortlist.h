@@ -12,6 +12,7 @@
 #ifndef _SORTLIST_H
 #define _SORTLIST_H
 
+#include "register_common.h"
 #include <functional>
 #include <stdexcept>
 
@@ -66,12 +67,10 @@ class SortList {
          *
          * _comp: a comparison function indicating the item to delete
          *
-         * throw runtime_error if trying to remove from an empty sortlist
-         *
          * delete all the item meet requirement in sortlist
          */
-        template<class CompRemove>
-        void remove(const CompRemove& _comp);
+        template<class CompRemove = ReturnTrue<T> >
+        void remove(const CompRemove& _comp = CompRemove());
         
         /*
          * iterator
@@ -680,16 +679,11 @@ SortList<T, Compare>::SortList(const Compare& _comp)
     end->cnt++;
 }
 
-template<typename T>
-static bool ReturnTrue(T &n) {
-    return true;
-}
-
 template<typename T, class Compare>
 SortList<T, Compare>& SortList<T, Compare>::operator=(const SortList<T, Compare>& q) {
     Node *t;
     //Empty the sortlist
-    remove<bool(*)(T&)>(ReturnTrue<T>);
+    remove();
     comparator = q.comparator;
     for(t = q.head->next; t->next; t = t->next) {
         //Iterate over the list to do deep copy
@@ -732,7 +726,7 @@ template<class CompRemove>
 void SortList<T, Compare>::remove(const CompRemove& _comp) {
     Node *t, *p;
     if(isEmpty()) {
-        throw runtime_error("Trying to remove from an empty sortlist!");
+        return;
     }
     //Iterate through the list
     t = head->next;

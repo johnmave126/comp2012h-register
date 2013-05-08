@@ -61,6 +61,9 @@ void test_suite1() {
         cout << (*itr) << endl;
     }
     cout << endl;
+
+    q.remove();
+    cout << "size: " << q.size() << endl;
     
     cout << "End Test Suite 1" << endl << endl;
 }

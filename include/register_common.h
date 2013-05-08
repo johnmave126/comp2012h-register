@@ -28,4 +28,12 @@
 #define WIN_TERM
 #endif
 
+//An always return true function object
+template<typename T>
+class ReturnTrue {
+    public:
+        ReturnTrue(){}
+        bool operator()(const T&) const{return true;}
+};
+
 #endif
