@@ -313,7 +313,7 @@ Hashmap<Key, Value, Hasher, Compare>::~Hashmap() {
         for(i = 0; i < slotn; i++) {
             arr_bucket[i].SortList<Node, _Compare>::~SortList();
         }
-        operator delete[](static_cast<void*>(arr_bucket));
+        operator delete(static_cast<void*>(arr_bucket));
     }
 }
 
@@ -335,7 +335,7 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
         for(i = 0; i < slotn; i++) {
             arr_bucket[i].SortList<Node, _Compare>::~SortList();
         }
-        operator delete[](static_cast<void*>(arr_bucket));
+        operator delete(static_cast<void*>(arr_bucket));
     }
 
     slotn = m.slotn;

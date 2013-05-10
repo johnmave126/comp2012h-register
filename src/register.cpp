@@ -52,7 +52,7 @@ void test_suite1() {
     q.insert(14,5);
     q.insert(6,6);
     
-    itr = q.query(1);
+    itr = q.query(2);
     try {
         while(true) {
             cout << (*itr) << endl;
