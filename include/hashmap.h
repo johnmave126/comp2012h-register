@@ -311,7 +311,7 @@ Hashmap<Key, Value, Hasher, Compare>::~Hashmap() {
     int i;
     if(arr_bucket) {
         for(i = 0; i < slotn; i++) {
-            (arr_bucket+i)->~SortList();
+            arr_bucket[i].SortList<Node, _Compare>::~SortList();
         }
         operator delete[](static_cast<void*>(arr_bucket));
     }
@@ -333,7 +333,7 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
     //Remove the original
     if(arr_bucket) {
         for(i = 0; i < slotn; i++) {
-            arr_bucket[i].~SortList();
+            arr_bucket[i].SortList<Node, _Compare>::~SortList();
         }
         operator delete[](static_cast<void*>(arr_bucket));
     }
