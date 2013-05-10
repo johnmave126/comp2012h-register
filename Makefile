@@ -1,13 +1,13 @@
 CC=gcc
 CPP=g++
 LINK=g++
-LFLAGS=
+LFLAGS=-fstack-protector
 LIBS=
 AR=ar
 RM=rm
 CP=cp
 INCPATH=-Iinclude -I.
-CFLAGS=-O0 -Wextra -Wall -g -fexceptions -fstack-protector
+CFLAGS=-O0 -Wextra -Wall -g -fexceptions -fstack-protector -Wno-unused-parameter
 CPPFLAGS=$(CFLAGS)
 
 TMP_PATH=build_tmp
@@ -19,13 +19,16 @@ HEADERS = include/bootstrap.h \
 		include/sortlist.h \
 		include/register_common.h \
 		include/term_utility.h \
-		include/hashmap.h
+		include/hashmap.h \
+		include/register_menu.h
 SOURCES = src/html_utility.cpp \
 		src/term_utility.cpp \
-		src/register.cpp
+		src/register.cpp \
+		src/register_menu.cpp
 OBJECTS = build_tmp/html_utility.o \
 		build_tmp/term_utility.o \
-		build_tmp/register.o 
+		build_tmp/register.o \
+		build_tmp/register_menu.o
 
 all: Register
 
@@ -40,8 +43,13 @@ build_tmp/term_utility.o: src/term_utility.cpp include/term_utility.h \
  include/register_common.h $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/term_utility.o src/term_utility.cpp
 
-build_tmp/register.o: src/register.cpp include/term_utility.h include/register_common.h\
- include/sortlist.h $(TMP_PATH)
+build_tmp/register_menu.o: src/register_menu.cpp include/register_common.h \
+ include/register_menu.h include/term_utility.h $(TMP_PATH)
+	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register_menu.o src/register_menu.cpp
+
+build_tmp/register.o:  src/register.cpp include/term_utility.h \
+ include/register_common.h include/register_menu.h \
+ include/term_utility.h include/hashmap.h include/sortlist.h $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register.o src/register.cpp
 
 $(TMP_PATH):
