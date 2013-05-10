@@ -161,7 +161,7 @@ class Hashmap<Key, Value, Hasher, Compare>::Iterator: public SortList<Node, _Com
     public:
         /* default constructor/destructor */
         Iterator();
-        ~Iterator();
+        virtual ~Iterator();
 
         /* conversion constructor
          *

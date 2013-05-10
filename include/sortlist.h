@@ -114,7 +114,7 @@ class SortList<T, Compare>::Iterator {
     public:
         /* default constructor/destructor */
         Iterator();
-        ~Iterator();
+        virtual ~Iterator();
         
         /* conversion constructor
          *
