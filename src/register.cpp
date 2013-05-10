@@ -56,7 +56,7 @@ void test_suite1() {
     try {
         while(true) {
             cout << (*itr) << endl;
-            itr++
+            itr++;
         }
     }
     catch(runtime_error& e) {
