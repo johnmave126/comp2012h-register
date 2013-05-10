@@ -68,8 +68,8 @@ class SortList {
          * delete all the item meet requirement in sortlist
          * null version, to accompany the function below
          */
-        void remove() {
-            remove<ReturnTrue<T> >();
+        int remove() {
+            return remove<ReturnTrue<T> >();
         }
 
         /*
@@ -78,9 +78,10 @@ class SortList {
          * _comp: a comparison function indicating the item to delete
          *
          * delete all the item meet requirement in sortlist
+         * return the number of items deleted
          */
         template<class CompRemove>
-        void remove(const CompRemove& _comp = CompRemove());
+        int remove(const CompRemove& _comp = CompRemove());
         
         /*
          * iterator
@@ -89,10 +90,11 @@ class SortList {
          */
         Iterator iterator() const;
         
-    private:
+    protected:
         //Declare nested class Node
         class Node;
-        
+
+    private:    
         //The pseudo head
         Node *head;
         
@@ -194,8 +196,8 @@ class SortList<T, Compare>::Iterator {
          * If the iterator comes to the end of the sortlist, there 
          * will be no change to the iterator.
          */
-        Iterator& operator++();
-        Iterator operator++(int);
+        virtual Iterator& operator++();
+        virtual Iterator operator++(int);
         
         /* prefix/postfix -- operator
          *
@@ -204,10 +206,12 @@ class SortList<T, Compare>::Iterator {
          * If the iterator comes to the beginning of the sortlist, there 
          * will be no change to the iterator.
          */
-        Iterator& operator--();
-        Iterator operator--(int);
+        virtual Iterator& operator--();
+        virtual Iterator operator--(int);
         
-    private:
+    protected:
+        typedef Node Node_A;
+
         /*
          * findValid
          *
@@ -216,7 +220,7 @@ class SortList<T, Compare>::Iterator {
          * return the address of the nearest valid node found
          * NULL for none found.
          */
-        Node* findValid() const;
+        virtual Node* findValid() const;
         
         /*
          * shiftNode
@@ -576,7 +580,10 @@ typename SortList<T, Compare>::Iterator& SortList<T, Compare>::Iterator::operato
         throw runtime_error("At the beginning of the sortlist!");
     }
     //Move to previous
-    shiftNode(elem->prev);
+    do {
+        shiftNode(elem->prev);
+        t = findValid();
+    }while(t != elem && t->prev->prev);
     return (*this);
 }
 
@@ -733,10 +740,11 @@ inline void SortList<T, Compare>::insert(T item) {
 
 template<typename T, class Compare>
 template<class CompRemove>
-void SortList<T, Compare>::remove(const CompRemove& _comp) {
+int SortList<T, Compare>::remove(const CompRemove& _comp) {
     Node *t, *p;
+    int cnt = 0;
     if(isEmpty()) {
-        return;
+        return 0;
     }
     //Iterate through the list
     t = head->next;
@@ -755,8 +763,10 @@ void SortList<T, Compare>::remove(const CompRemove& _comp) {
             Node::decCnt(p);
             //Decrese size
             length--;
+            cnt++;
         }
     }
+    return cnt;
 }
 
 template<typename T, class Compare>

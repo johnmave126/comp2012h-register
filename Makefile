@@ -7,7 +7,7 @@ AR=ar
 RM=rm
 CP=cp
 INCPATH=-Iinclude -I.
-CFLAGS=-O2 -Wextra -Wall -g -fexceptions -fstack-protector
+CFLAGS=-O0 -Wextra -Wall -g -fexceptions -fstack-protector
 CPPFLAGS=$(CFLAGS)
 
 TMP_PATH=build_tmp
@@ -18,7 +18,8 @@ HEADERS = include/bootstrap.h \
 		include/deque.h \
 		include/sortlist.h \
 		include/register_common.h \
-		include/term_utility.h 
+		include/term_utility.h \
+		include/hashmap.h
 SOURCES = src/html_utility.cpp \
 		src/term_utility.cpp \
 		src/register.cpp
