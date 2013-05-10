@@ -55,8 +55,9 @@ class RegisterObject {
         }
 
         RegisterObject(RegisterObject* _parent):parent(_parent), head(NULL) {
-            _node *t = new _node;
+            _node *t;
             if(parent) {
+                t = new _node;
                 //Add to parent's children list
                 t->item = this;
                 t->next = parent->head;
