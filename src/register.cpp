@@ -14,10 +14,12 @@
 #include "sortlist.h"
 #include "hashmap.h"
 #include <iostream>
+#include <stdexcept>
 
 using std::cout;
 using std::cin;
 using std::endl;
+using std::runtime_error;
 
 static bool filter(int n) {
     return (n >= 4) && (n <= 8);
@@ -51,9 +53,14 @@ void test_suite1() {
     q.insert(6,6);
     
     itr = q.query(1);
-    cout << "deque: " << q.size() << endl;
-    for(i = 0; i < q.size(); i++, ++itr) {
-        cout << (*itr) << endl;
+    try {
+        while(true) {
+            cout << (*itr) << endl;
+            itr++
+        }
+    }
+    catch(runtime_error& e) {
+        //Ignore
     }
     cout << endl;
     /*
