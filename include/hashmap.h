@@ -311,7 +311,7 @@ Hashmap<Key, Value, Hasher, Compare>::~Hashmap() {
     int i;
     if(arr_bucket) {
         for(i = 0; i < slotn; i++) {
-            arr_bucket[i].~SortList();
+            (arr_bucket+i)->~SortList();
         }
         operator delete[](static_cast<void*>(arr_bucket));
     }
