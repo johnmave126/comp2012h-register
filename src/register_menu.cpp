@@ -74,12 +74,13 @@ int RegisterMenu::exec() {
     char buff[256];
     char *end_ptr;
     long int input_number;
+    int size = static_cast<int>(subItems.size());
 
     //Clear the terminal
     activeTerm->clr();
 
     //Generate valid range
-    sprintf(buff, "%d", subItems.size() + 1);
+    sprintf(buff, "%d", size + 1);
 
     //Display the menu
     displayMenu();
@@ -108,14 +109,14 @@ int RegisterMenu::exec() {
             }
             input_number = strtol(input.c_str(), &end_ptr, 10);
             //invalid number
-            if(*end_ptr || input_number == 0 || input_number > subItems.size() + 1) {
+            if(*end_ptr || input_number == 0 || input_number > size + 1) {
                 valid = false;
                 break;
             }
         }while(false);
 
         if(valid) {
-            if(input_number <= subItems.size()) {
+            if(input_number <= size) {
                 //Execute the wanted action
                 ret_flag = subItems[input_number - 1].item->fire(subItems[input_number - 1].idx);
                 cout << endl << "Hit ENTER to continue.." << endl;
