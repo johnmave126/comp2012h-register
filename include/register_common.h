@@ -50,6 +50,7 @@ class RegisterObject {
                 p = t;
                 t = t->next;
                 delete p->item;
+                delete p;
             }
         }
 
