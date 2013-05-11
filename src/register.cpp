@@ -12,7 +12,7 @@
 #include "term_utility.h"
 #include "register_common.h"
 #include "register_menu.h"
-#include "hashmap.h"
+#include "regular_expression.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -23,11 +23,21 @@ using std::runtime_error;
 
 
 int main(int argc, char **argv) {
-    int k = 0;
+    string input;
+    RegExp re;
     Term terminal;
-    RegisterMenu m(&terminal, NULL, "HKUST Course Registration System");
     terminal.init();
-    m.exec();
+    getline(cin, input);
+    re = input;
+    while(true) {
+        getline(cin, input);
+        if(re.match(input)) {
+            cout << "true" << endl;
+        }
+        else {
+            cout << "false" << endl;
+        }
+    }
     terminal.restore();
     return 0;
 }

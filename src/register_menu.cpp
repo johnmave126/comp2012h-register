@@ -69,7 +69,6 @@ void RegisterMenu::insertItem(string _title, RegisterObject* obj, string event) 
 int RegisterMenu::exec() {
     string input;
     bool valid;
-    int ret_flag;
     string::iterator itr;
     char buff[256];
     char *end_ptr;
@@ -118,12 +117,7 @@ int RegisterMenu::exec() {
         if(valid) {
             if(input_number <= size) {
                 //Execute the wanted action
-                ret_flag = subItems[input_number - 1].item->fire(subItems[input_number - 1].idx);
-                cout << endl << "Hit ENTER to continue.." << endl;
-                //Read a line
-                getline(cin, input);
-
-                if(ret_flag) {
+                if(subItems[input_number - 1].item->fire(subItems[input_number - 1].idx)) {
                     //Clear the terminal
                     activeTerm->clr();
                     //Display the menu
