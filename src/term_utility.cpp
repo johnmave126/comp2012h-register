@@ -18,7 +18,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 using std::cout;
+using std::cin;
+using std::string;
 
 Term::Term()
 #ifdef WIN_TERM
@@ -96,4 +99,10 @@ void Term::restore() {
     #ifdef WIN_TERM
     }
     #endif
+}
+
+void Term::pause() {
+    string tmp;
+    cout << "Hit ENTER to continue... \n";
+    getline(cin, tmp);
 }

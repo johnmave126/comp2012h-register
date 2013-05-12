@@ -39,6 +39,10 @@ class Hashmap {
         /* assign operator */
         Hashmap<Key, Value, Hasher, Compare>& operator=(const Hashmap<Key, Value, Hasher, Compare>&);
 
+        /* subscript operator */
+        //Return NULL if not found. Return the first one if multiple instances.
+        Value* operator[](const Key&);
+
         /*
          * isEmpty
          *
@@ -350,6 +354,21 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
             new(&arr_bucket[i])SortList<Node, _Compare>(m.arr_bucket[i]);
         }
     }
+
+    return (*this);
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Value* Hashmap<Key, Value, Hasher, Compare>::operator[](const Key& hashKey) {
+    Iterator itr = Iterator(arr_bucket[hashFunctoin(hashKey) % slotn], hashKey);
+    try {
+        return &(*itr);
+    }
+    catch(runtime_error& e) {
+        //End of iteration
+        return NULL;
+    }
+    return NULL;
 }
 
 template<typename Key, typename Value, class Hasher, class Compare>

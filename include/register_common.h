@@ -101,4 +101,19 @@ int class::fire(int id) {                       \
     return (this->*(methods[id].fnc))();        \
 }                                       
 
+//ELFHash function
+int ELFHash(const char *str) {
+    unsigned int hash = 0, g = 0;
+    while(*str) {
+        hash = (hash << 4) + *str++;
+        if(g = hash & 0xF000000L)
+            hash ^= g >> 24;
+    }
+    return (int)(hash & 0x7FFFFFFFL);
+}
+
+int ELFHash(string str) {
+    return ELFHash(str.c_str());
+}
+
 #endif

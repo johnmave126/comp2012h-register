@@ -44,6 +44,13 @@ class Term {
          */
         void restore();
 
+        /*
+         * restore
+         *
+         * Pause and prompt some information
+         */
+        void pause();
+
     private:
         #ifdef WIN_TERM
         HANDLE hStdOut;

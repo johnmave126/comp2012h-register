@@ -59,6 +59,15 @@ class RegExp {
         /* assign operator */
         RegExp& operator=(const RegExp&);
 
+        //Only for compatibility
+        /* compare operators */
+        bool operator<(const RegExp& r) {return Re < r.Re;}
+        bool operator<=(const RegExp& r) {return Re <= r.Re;}
+        bool operator>(const RegExp& r) {return Re > r.Re;}
+        bool operator>=(const RegExp& r) {return Re >= r.Re;}
+        bool operator==(const RegExp& r) {return Re == r.Re;}
+        bool operator!=(const RegExp& r) {return Re != r.Re;}
+
         /*
          * match
          *
