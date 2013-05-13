@@ -36,7 +36,7 @@ class RegisterMenu: public RegisterObject {
         RegisterMenu(const RegisterMenu&);
 
         /* conversion constructor */
-        explicit RegisterMenu(Term* term, RegisterMenu* _parent = NULL, string _title = "Untitled");
+        explicit RegisterMenu(Term* term, RegisterObject* _parent = NULL, string _title = "Untitled");
 
         /* assign operator */
         RegisterMenu& operator=(const RegisterMenu&);

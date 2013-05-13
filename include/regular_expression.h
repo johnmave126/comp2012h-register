@@ -61,12 +61,12 @@ class RegExp {
 
         //Only for compatibility
         /* compare operators */
-        bool operator<(const RegExp& r) {return Re < r.Re;}
-        bool operator<=(const RegExp& r) {return Re <= r.Re;}
-        bool operator>(const RegExp& r) {return Re > r.Re;}
-        bool operator>=(const RegExp& r) {return Re >= r.Re;}
-        bool operator==(const RegExp& r) {return Re == r.Re;}
-        bool operator!=(const RegExp& r) {return Re != r.Re;}
+        bool operator<(const RegExp& r) const {return Re < r.Re;}
+        bool operator<=(const RegExp& r) const {return Re <= r.Re;}
+        bool operator>(const RegExp& r) const {return Re > r.Re;}
+        bool operator>=(const RegExp& r) const {return Re >= r.Re;}
+        bool operator==(const RegExp& r) const {return Re == r.Re;}
+        bool operator!=(const RegExp& r) const {return Re != r.Re;}
 
         /*
          * match

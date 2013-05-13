@@ -25,13 +25,14 @@ template<typename Key, typename Value, class Hasher, class Compare = less<Value>
 class Hashmap {
     public:
         class Iterator;
+        class Iterator_All;
 
         /* default constructor/destructor */
         Hashmap();
         ~Hashmap();
 
         /* conversion constructor */
-        explicit Hashmap(Hasher _hash, int _slot = 500, Compare _comp = Compare());
+        explicit Hashmap(Hasher _hash, int _slot = 503, Compare _comp = Compare());
 
         /* copy constructor */
         Hashmap(const Hashmap&);
@@ -112,6 +113,13 @@ class Hashmap {
         template<class Callback>
         void apply(const Key& hashKey, const Callback& _cbk) const;
 
+        /*
+         * dump
+         *
+         * dump all the record in order
+         */
+        Iterator_All dump() const;
+
     private:
         //Node
         struct Node {
@@ -128,6 +136,9 @@ class Hashmap {
                 }
                 bool operator()(const Node &a, const Node &b) {
                     return cmp(a.val, b.val);
+                }
+                bool operator()(const Value &a, const Value &b) {
+                    return cmp(a, b);
                 }
             private:
                 Compare cmp;
@@ -147,7 +158,7 @@ class Hashmap {
         };
 
         //The buckets
-        SortList<Node, _Compare> *arr_bucket;
+        SortList<Node, _Compare> **arr_bucket;
 
         //The number of slots
         int slotn;
@@ -214,7 +225,236 @@ class Hashmap<Key, Value, Hasher, Compare>::Iterator: public SortList<Node, _Com
         Key hashKey;
 };
 
-/* SortList Iterator */
+//A special iterator to iterate all the map
+template<typename Key, typename Value, class Hasher, class Compare>
+class Hashmap<Key, Value, Hasher, Compare>::Iterator_All {
+    public:
+        /* default constructor/destructor */
+        Iterator_All();
+        ~Iterator_All();
+
+        /* conversion constructor
+         *
+         * The iterator will initialize according to the map
+         */
+        Iterator_All(const Hashmap<Key, Value, Hasher, Compare>&);
+        
+        /* copy constructor */
+        Iterator_All(const Iterator_All&);
+        
+        /* assign operator */
+        Iterator_All& operator=(const Iterator_All&);
+
+        /* dereference operators
+         *
+         * non-const version
+         * throw runtime_error if the node pointed to belongs to
+         * a sortlist destroyed, or the iterator points to no node
+         */
+        Value& operator*();
+        Value* operator->();
+        
+        /* dereference operators
+         *
+         * const version
+         * throw runtime_error if the node pointed to belongs to
+         * a sortlist destroyed, or the iterator points to no node
+         */
+        Value& operator*() const;
+        Value* operator->() const;
+        
+        /* prefix/postfix ++ operator
+         *
+         * throw runtime_error if the node pointed to belongs to
+         * a sortlist destroyed, or the iterator points to no node.
+         * If the iterator comes to the end of the hashmap, there 
+         * will be no change to the iterator.
+         */
+        Iterator_All& operator++();
+        Iterator_All operator++(int);
+
+    private:
+        /* removeNull
+         *
+         * remove iterators which are at the end
+         */
+        void removeNull();
+
+        /* findSmall
+         *
+         * return the smallest iterator of all
+         */
+        typename SortList<Node, _Compare>::Iterator* findSmall();
+
+        //size
+        int size;
+
+        //Iterators
+        typename SortList<Node, _Compare>::Iterator** arr_itr;
+
+        //Current one
+        typename SortList<Node, _Compare>::Iterator* current;
+};
+
+/* Hashmap Iterator_All */
+template<typename Key, typename Value, class Hasher, class Compare>
+Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All() {
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Hashmap<Key, Value, Hasher, Compare>::Iterator_All::~Iterator_All() {
+    int i;
+    //Free the memory
+    if(arr_itr) {
+        for(i = 0; i < size; i++) {
+            delete arr_itr[i];
+        }
+        delete [] arr_itr;
+    }
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All(const Hashmap<Key, Value, Hasher, Compare>& h)
+:size(h.slotn),
+ arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]) {
+    int i;
+    //Init the Iterator list
+    for(i = 0; i < size; i++) {
+        arr_itr[i] = new typename SortList<Node, _Compare>::Iterator(h.arr_bucket[i]);
+    }
+    //Clean up
+    removeNull();
+    //Set head
+    current = findSmall();
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All(const Hashmap<Key, Value, Hasher, Compare>::Iterator_All& itr)
+:size(itr.size),
+ arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]) {
+    int i;
+    //Init the Iterator list
+    for(i = 0; i < size; i++) {
+        arr_itr[i] = new typename SortList<Node, _Compare>::Iterator(*(itr.arr_itr[i]));
+    }
+    //Clean up
+    removeNull();
+    //Set head
+    current = findSmall();
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+typename Hashmap<Key, Value, Hasher, Compare>::Iterator_All& Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator=(const Hashmap<Key, Value, Hasher, Compare>::Iterator_All& itr) {
+    int i;
+    //Free the memory
+    if(arr_itr) {
+        for(i = 0; i < size; i++) {
+            delete arr_itr[i];
+        }
+        delete [] arr_itr;
+    }
+
+    size = itr.size;
+    //Allocate memory
+    arr_itr = new typename SortList<Node, _Compare>::Iterator*[size];
+    //Init the Iterator list
+    for(i = 0; i < size; i++) {
+        arr_itr[i] = new typename SortList<Node, _Compare>::Iterator(*(itr.arr_itr[i]));
+    }
+    //Clean up
+    removeNull();
+    //Set head
+    current = findSmall();
+
+    return (*this);
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Value& Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator*() {
+    if(!current) {
+        //At the end
+        throw runtime_error("Iteration at the end");
+    }
+    return current->operator*().val;
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Value* Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator->() {
+    //Reuse
+    return &(*(*this));
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Value& Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator*() const {
+    if(!current) {
+        //At the end
+        throw runtime_error("Iteration at the end");
+    }
+    return current->operator*().val;
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+Value* Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator->() const {
+    //Reuse
+    return &(*(*this));
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+typename Hashmap<Key, Value, Hasher, Compare>::Iterator_All& Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator++() {
+    if(!current) {
+        //At the end
+        throw runtime_error("Iteration at the end");
+    }
+    current->operator++();
+    removeNull();
+    current = findSmall();
+    return (*this);
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+typename Hashmap<Key, Value, Hasher, Compare>::Iterator_All Hashmap<Key, Value, Hasher, Compare>::Iterator_All::operator++(int) {
+    //Reuse
+    Iterator_All tmp = (*this);
+    operator++();
+    return tmp;
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+void Hashmap<Key, Value, Hasher, Compare>::Iterator_All::removeNull() {
+    int i = 0;
+    while(i < size) {
+        try{
+            arr_itr[i]->operator*();
+        }
+        catch(runtime_error& e) {
+            //Remove
+            delete arr_itr[i];
+            arr_bucket[i] = NULL;
+            arr_bucket[i] = arr_bucket[size - 1];
+            size--;
+            continue;
+        }
+        i++;
+    }
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
+typename SortList<typename Hashmap<Key, Value, Hasher, Compare>::Node, typename Hashmap<Key, Value, Hasher, Compare>::_Compare>::Iterator* Hashmap<Key, Value, Hasher, Compare>::Iterator_All::findSmall() {
+    int i = 0;
+    typename SortList<Node, _Compare>::Iterator* res;
+    if(size == 0) {
+        return NULL;
+    }
+    res = arr_itr[0];
+    for(i = 1; i < size; i++) {
+        if(!comp(res->operator*(), arr_itr[i]->operator*())) {
+            res = arr_itr[i];
+        }
+    }
+    return res;
+}
+
+/* Hashmap Iterator */
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Iterator::Iterator()
 :SortList<Node, _Compare>::Iterator() {
@@ -302,11 +542,11 @@ typename SortList<typename Hashmap<Key, Value, Hasher, Compare>::Node, typename 
 /* Hashmap */
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Hashmap()
-:comp(Compare()), arr_bucket(static_cast<SortList<Node, _Compare>*>(operator new (sizeof(SortList<Node, _Compare>) * 500))),
- slotn(500), length(0), hashFunctoin(Hasher()) {
+:comp(Compare()), arr_bucket(new SortList<Node, _Compare>*[503]),
+ slotn(503), length(0), hashFunctoin(Hasher()) {
     int i;
     for(i = 0; i < slotn; i++) {
-        new(&arr_bucket[i])SortList<Node, _Compare>(comp);
+        arr_bucket[i] = new SortList<Node, _Compare>(comp);
     }
 }
 
@@ -315,19 +555,19 @@ Hashmap<Key, Value, Hasher, Compare>::~Hashmap() {
     int i;
     if(arr_bucket) {
         for(i = 0; i < slotn; i++) {
-            arr_bucket[i].SortList<Node, _Compare>::~SortList();
+            delete arr_bucket[i];
         }
-        operator delete(static_cast<void*>(arr_bucket));
+        delete [] arr_bucket;
     }
 }
 
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Hashmap(Hasher _hash, int _slot, Compare _comp)
-:comp(_comp), arr_bucket(static_cast<SortList<Node, _Compare>*>(operator new (sizeof(SortList<Node, _Compare>) * ((_slot > 0) ? (_slot) : (500))))),
- slotn((_slot > 0) ? (_slot) : (500)), length(0), hashFunctoin(_hash) {
+:comp(_comp), arr_bucket(new SortList<Node, _Compare>*[(_slot > 0) ? (_slot) : (503)]),
+ slotn((_slot > 0) ? (_slot) : (503)), length(0), hashFunctoin(_hash) {
     int i;
     for(i = 0; i < slotn; i++) {
-        new(&arr_bucket[i]) SortList<Node, _Compare>(comp);
+        arr_bucket[i] = new SortList<Node, _Compare>(comp);
     }
 }
 
@@ -337,9 +577,9 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
     //Remove the original
     if(arr_bucket) {
         for(i = 0; i < slotn; i++) {
-            arr_bucket[i].SortList<Node, _Compare>::~SortList();
+            delete arr_bucket[i];
         }
-        operator delete(static_cast<void*>(arr_bucket));
+        delete [] arr_bucket;
     }
 
     slotn = m.slotn;
@@ -349,9 +589,9 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
     arr_bucket = NULL;
 
     if(m.arr_bucket) {
-        arr_bucket = static_cast<SortList<Node, _Compare>*>(operator new (sizeof(SortList<Node, _Compare>) * slotn));
+        arr_bucket = new SortList<Node, _Compare>*[slotn];
         for(i = 0; i < slotn; i++) {
-            new(&arr_bucket[i])SortList<Node, _Compare>(m.arr_bucket[i]);
+            arr_bucket[i] = new SortList<Node, _Compare>(m.arr_bucket[i]);
         }
     }
 
@@ -360,7 +600,7 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
 
 template<typename Key, typename Value, class Hasher, class Compare>
 Value* Hashmap<Key, Value, Hasher, Compare>::operator[](const Key& hashKey) {
-    Iterator itr = Iterator(arr_bucket[hashFunctoin(hashKey) % slotn], hashKey);
+    Iterator itr = Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
     try {
         return &(*itr);
     }
@@ -387,7 +627,7 @@ void Hashmap<Key, Value, Hasher, Compare>::insert(const Key& hashKey, const Valu
     tmp.k = hashKey;
     tmp.val = item;
     //Locate the bucket
-    arr_bucket[hashFunctoin(hashKey) % slotn].insert(tmp);
+    arr_bucket[hashFunctoin(hashKey, slotn)]->insert(tmp);
     length++;
 }
 
@@ -395,7 +635,7 @@ template<typename Key, typename Value, class Hasher, class Compare>
 template<class CompRemove>
 int Hashmap<Key, Value, Hasher, Compare>::remove(const Key& hashKey, const CompRemove& _comp) {
     //Use custom remove function
-    int cnt = arr_bucket[hashFunctoin(hashKey) % slotn].remove<_CustomRemove>(_CustomRemove<CompRemove>(hashKey, _comp));
+    int cnt = arr_bucket[hashFunctoin(hashKey, slotn)].remove<_CustomRemove>(_CustomRemove<CompRemove>(hashKey, _comp));
     length -= cnt;
     return cnt;
 }
@@ -403,13 +643,13 @@ int Hashmap<Key, Value, Hasher, Compare>::remove(const Key& hashKey, const CompR
 template<typename Key, typename Value, class Hasher, class Compare>
 typename Hashmap<Key, Value, Hasher, Compare>::Iterator Hashmap<Key, Value, Hasher, Compare>::query(const Key& hashKey) const {
     //Simply use constructor of Iterator
-    return Iterator(arr_bucket[hashFunctoin(hashKey) % slotn], hashKey);
+    return Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
 }
 
 template<typename Key, typename Value, class Hasher, class Compare>
 template<class Callback>
 void Hashmap<Key, Value, Hasher, Compare>::apply(const Key& hashKey, const Callback& _cbk) const {
-    Iterator itr = Iterator(arr_bucket[hashFunctoin(hashKey) % slotn], hashKey);
+    Iterator itr = Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
     try {
         while(true) {
             _cbk(*itr);

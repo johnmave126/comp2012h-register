@@ -39,7 +39,7 @@ RegisterMenu::RegisterMenu(const RegisterMenu& m)
  activeTerm(m.activeTerm), title(m.title){
 }
 
-RegisterMenu::RegisterMenu(Term* term, RegisterMenu* _parent, string _title)
+RegisterMenu::RegisterMenu(Term* term, RegisterObject* _parent, string _title)
 :RegisterObject(_parent), activeTerm(term), title(_title) {
 }
 
@@ -117,7 +117,7 @@ int RegisterMenu::exec() {
         if(valid) {
             if(input_number <= size) {
                 //Execute the wanted action
-                if(subItems[input_number - 1].item->fire(subItems[input_number - 1].idx)) {
+                if(subItems[input_number - 1].item->fire(subItems[input_number - 1].idx) || !parent) {
                     //Clear the terminal
                     activeTerm->clr();
                     //Display the menu
