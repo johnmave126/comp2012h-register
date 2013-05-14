@@ -36,12 +36,37 @@ class RegisterSystem: public RegisterObject {
         /* conversion constructor */
         explicit RegisterSystem(Term* _terminal);
 
+        //Begin Student Management
+
         /*
-         * DoNothing
+         * insertStudent
          *
-         * DoNothing
+         * handle when insert student
          */
-        int DoNothing();
+        int insertStudent();
+
+        /*
+         * modifyStudent
+         *
+         * handle when modify student
+         */
+        int modifyStudent();
+
+        /*
+         * deleteStudent
+         *
+         * handle when delete student
+         */
+        int deleteStudent();
+
+        /*
+         * queryStudent
+         *
+         * handle when query student
+         */
+        int queryStudent();
+
+        //End Student Management
 
         /*
          * exec

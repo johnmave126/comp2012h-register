@@ -120,4 +120,75 @@ class RegisterStudent {
         string id, name, gender, year;
 };
 
+inline RegisterStudent& RegisterStudent::operator=(const RegisterStudent& r) {
+    //Simply copy
+    id = r.id;
+    name = r.name;
+    gender = r.gender;
+    year = r.year;
+    return (*this);
+}
+
+inline bool RegisterStudent::operator<(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id < r.id;
+}
+
+inline bool RegisterStudent::operator>=(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id >= r.id;
+}
+
+inline bool RegisterStudent::operator>(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id > r.id;
+}
+
+inline bool RegisterStudent::operator<=(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id <= r.id;
+}
+
+inline bool RegisterStudent::operator==(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id == r.id;
+}
+
+inline bool RegisterStudent::operator!=(const RegisterStudent& r) const {
+    //Use id as primary key
+    return id != r.id;
+}
+
+inline string RegisterStudent::getStuId() const {
+    return id;
+}
+
+inline void RegisterStudent::setStuId(string _id) {
+    id = _id;
+}
+
+inline string RegisterStudent::getStuName() const {
+    return name;
+}
+
+inline void RegisterStudent::setStuName(string _name) {
+    name = _name;
+}
+
+inline string RegisterStudent::getYear() const {
+    return year;
+}
+
+inline void RegisterStudent::setYear(string _year) {
+    year = _year;
+}
+
+inline string RegisterStudent::getGender() const {
+    return gender;
+}
+
+inline void RegisterStudent::setGender(string _gender) {
+    gender = _gender;
+}
+
 #endif

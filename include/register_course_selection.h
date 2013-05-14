@@ -29,15 +29,15 @@ class RegisterCourseSelection {
         RegisterCourseSelection(const RegisterCourseSelection&);
 
         /* assign operator */
-        RegisterCourseSelection& operator=(const RegisterCourseSelection&);
+        inline RegisterCourseSelection& operator=(const RegisterCourseSelection&);
 
         /* compare operators */
-        bool operator<(const RegisterCourseSelection&) const;
-        bool operator>=(const RegisterCourseSelection&) const;
-        bool operator>(const RegisterCourseSelection&) const;
-        bool operator<=(const RegisterCourseSelection&) const;
-        bool operator==(const RegisterCourseSelection&) const;
-        bool operator!=(const RegisterCourseSelection&) const;
+        inline bool operator<(const RegisterCourseSelection&) const;
+        inline bool operator>=(const RegisterCourseSelection&) const;
+        inline bool operator>(const RegisterCourseSelection&) const;
+        inline bool operator<=(const RegisterCourseSelection&) const;
+        inline bool operator==(const RegisterCourseSelection&) const;
+        inline bool operator!=(const RegisterCourseSelection&) const;
 
         /*
          * getStuId
@@ -102,5 +102,67 @@ class RegisterCourseSelection {
         //The data
         string id, code, mark;
 };
+
+inline RegisterCourseSelection& RegisterCourseSelection::operator=(const RegisterCourseSelection& r) {
+    //Simply copy
+    id = r.id;
+    code = r.code;
+    mark = r.mark;
+    return (*this);
+}
+
+inline bool RegisterCourseSelection::operator<(const RegisterCourseSelection& r) const {
+    //Use id as primary key, code as secondary key
+    return (id == r.id)?(code < r.code):(id < r.id);
+}
+
+inline bool RegisterCourseSelection::operator>=(const RegisterCourseSelection& r) const {
+    //Reuse
+    return !((*this) < r);
+}
+
+inline bool RegisterCourseSelection::operator>(const RegisterCourseSelection& r) const {
+    //Use id as primary key, code as secondary key
+    return (id == r.id)?(code > r.code):(id > r.id);
+}
+
+inline bool RegisterCourseSelection::operator<=(const RegisterCourseSelection& r) const {
+    //Reuse
+    return !((*this) > r);
+}
+
+inline bool RegisterCourseSelection::operator==(const RegisterCourseSelection& r) const {
+    //Use id as primary key, code as secondary key
+    return id == r.id && code == r.code;
+}
+
+inline bool RegisterCourseSelection::operator!=(const RegisterCourseSelection& r) const {
+    //Use id as primary key, code as secondary key
+    return id != r.id || code != r.code;
+}
+
+inline string RegisterCourseSelection::getStuId() const {
+    return id;
+}
+
+inline void RegisterCourseSelection::setStuId(string _id) {
+    id = _id;
+}
+
+inline string RegisterCourseSelection::getCode() const {
+    return code;
+}
+
+inline void RegisterCourseSelection::setCode(string _code) {
+    code = _code;
+}
+
+inline string RegisterCourseSelection::getMark() const {
+    return mark;
+}
+
+inline void RegisterCourseSelection::setMark(string _mark) {
+    mark = _mark;
+}
 
 #endif

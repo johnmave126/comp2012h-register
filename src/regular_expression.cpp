@@ -19,6 +19,19 @@
 using std::string;
 using std::vector;
 
+//Handy function to deal with parenthesis
+static const char* go_through_pa(const char* str) {
+    while(*str && ( *str != ')' || *(str - 1) == '\\' )) {
+        if(*str == '(' && *(str - 1) != '\\') {
+            str = go_through_pa(str + 1);
+        }
+        else {
+            str++;
+        }
+    }
+    return (*str)?(str + 1):(str);
+}
+
 RegExp::RegExp()
 :Re("") {
 }
@@ -80,12 +93,15 @@ bool RegExp::matchhere(const char *regex, const char *str) {
         case '[':
             cur_type = 2;
             regex++;
-            while(*regex != ']' || *(regex - 1) == '\\') {
+            while(*regex && (*regex != ']' || *(regex - 1) == '\\')) {
                 if(regex[0] == '\0') {
                     return false;
                 }
                 s.push_back(regex[0]);
                 regex++;
+            }
+            if(!*regex) {
+                return false;
             }
             regex++;
             break;
@@ -93,12 +109,21 @@ bool RegExp::matchhere(const char *regex, const char *str) {
             cur_type = 3;
             regex++;
             last_seg = regex;
-            while(*regex != ')' || *(regex - 1) == '\\') {
+            while(*regex && (*regex != ')' || *(regex - 1) == '\\')) {
+                if(*regex == '(' && *(regex - 1) != '\\') {
+                    regex = go_through_pa(regex + 1);
+                }
                 if(*regex == '|' && *(regex - 1) != '\\' ) {
                     v.push_back(string(last_seg, regex - last_seg));
                     last_seg = regex + 1;
+                    regex++;
                 }
-                regex++;
+                else {
+                    regex++;
+                }
+            }
+            if(!*regex) {
+                return false;
             }
             v.push_back(string(last_seg, regex - last_seg));
             regex++;

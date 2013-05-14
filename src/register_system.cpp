@@ -73,7 +73,7 @@ RegisterSystem::~RegisterSystem() {
 
 RegisterSystem::RegisterSystem(Term* _terminal)
 :terminal(_terminal), 
- menu(terminal, this, "HKUST Course Registration System"),
+ menu(terminal, NULL, "HKUST Course Registration System"),
  DataStudents(hashStuId, 29), DataCourses(hashCode, 17),
  CourseSelectionID(hashStuId, 31, cmpCSp), CourseSelectionCode(hashCode, 31, cmpCSp) {
     //Init verifiers
@@ -89,12 +89,6 @@ void RegisterSystem::exec() {
     menu.exec();
     //Restore Terminal
     terminal->restore();
-}
-
-int RegisterSystem::DoNothing() {
-    cout << "1000!" << endl;
-    terminal->pause();
-    return 1;
 }
 
 void RegisterSystem::init_verifier() {
@@ -114,14 +108,28 @@ void RegisterSystem::init_verifier() {
     verifier.insert("Credit", "^0*[12345]$");
     //Course Mark
     verifier.insert("Mark", "^0*(100|\\d{1,2})$");
+    //Course Mark for import
+    verifier.insert("MarkImport", "^(N/A|0*(100|\\d{1,2}))$");
 }
 
 void RegisterSystem::init_menu() {
-    menu.insertItem("Do nothing", this, "DoNothing");
+    RegisterMenu *student_manager;
+
+    //Creation of student management
+    student_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Student Menu)");
+    student_manager->insertItem("Insert Student Record", this, "insertStudent");
+    student_manager->insertItem("Modify Student Record", this, "modifyStudent");
+    student_manager->insertItem("Delete Student Record", this, "deleteStudent");
+    student_manager->insertItem("Query Student Record", this, "queryStudent");
+    menu.insertItem("Student Management", student_manager);
+
 }
 
 RegisterSystem::RegType RegisterSystem::methods[] = {
-    {"DoNothing", &RegisterSystem::DoNothing},
+    {"insertStudent", &RegisterSystem::insertStudent},
+    {"modifyStudent", &RegisterSystem::modifyStudent},
+    {"deleteStudent", &RegisterSystem::deleteStudent},
+    {"queryStudent", &RegisterSystem::queryStudent},
     {0, 0}
 };
 REGISTER_EVENT_FNC(RegisterSystem)

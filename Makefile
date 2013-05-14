@@ -37,7 +37,8 @@ SOURCES = src/html_utility.cpp \
 		src/register_student.cpp \
 		src/register_course.cpp \
 		src/register_course_selection.cpp \
-		src/register_system.cpp
+		src/register_system.cpp \
+		src/register_student_management.cpp
 OBJECTS = build_tmp/html_utility.o \
 		build_tmp/term_utility.o \
 		build_tmp/register.o \
@@ -48,7 +49,8 @@ OBJECTS = build_tmp/html_utility.o \
 		build_tmp/register_student.o \
 		build_tmp/register_course.o \
 		build_tmp/register_course_selection.o \
-		build_tmp/register_system.o
+		build_tmp/register_system.o \
+		build_tmp/register_student_management.o
 
 all: Register
 
@@ -108,6 +110,15 @@ build_tmp/register_system.o: src/register_system.cpp include/register_common.h \
  include/register_course.h include/register_course_selection.h 
 	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register_system.o src/register_system.cpp
+
+build_tmp/register_student_management.o: src/register_student_management.cpp \
+ include/register_common.h include/register_system.h \
+ include/term_utility.h include/sortlist.h include/hashmap.h \
+ include/register_verifier.h include/regular_expression.h include/register_menu.h \
+ include/register_student.h include/register_course.h \
+ include/register_course_selection.h
+	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
+	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register_student_management.o src/register_student_management.cpp
 
 build_tmp/register.o:  src/register.cpp include/register_common.h \
  include/term_utility.h include/register_system.h \

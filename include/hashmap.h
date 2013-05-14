@@ -661,4 +661,11 @@ void Hashmap<Key, Value, Hasher, Compare>::apply(const Key& hashKey, const Callb
     }
 }
 
+
+template<typename Key, typename Value, class Hasher, class Compare>
+typename Hashmap<Key, Value, Hasher, Compare>::Iterator_All Hashmap<Key, Value, Hasher, Compare>::dump() const {
+    //Simply use constructor of Iterator
+    return Iterator_All(*this);
+}
+
 #endif
