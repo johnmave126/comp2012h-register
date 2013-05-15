@@ -4,9 +4,9 @@
  * Stu ID: 20090398
  * 2013 Spring
  *
- * html_utility.cpp
+ * html_table.cpp
  *
- * html generating utilities
+ * support table of html
  */
 
 #include "html_table.h"
