@@ -83,7 +83,7 @@ class SortList {
          * return the number of items deleted
          */
         template<class CompRemove>
-        int remove(const CompRemove& _comp = CompRemove());
+        int remove(CompRemove& _comp = CompRemove());
         
         /*
          * iterator
@@ -744,7 +744,7 @@ inline T* SortList<T, Compare>::insert(T item) {
 
 template<typename T, class Compare>
 template<class CompRemove>
-int SortList<T, Compare>::remove(const CompRemove& _comp) {
+int SortList<T, Compare>::remove(CompRemove& _comp) {
     Node *t, *p;
     int cnt = 0;
     if(isEmpty()) {

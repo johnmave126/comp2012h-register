@@ -53,7 +53,7 @@ OBJECTS = build_tmp/html_utility.o \
 		build_tmp/register_system.o \
 		build_tmp/register_student_management.o
 
-all: Makefile.control $(BIN_PATH)/Register
+all: $(TMP_PATH)/Makefile.control $(BIN_PATH)/Register
 
 $(BIN_PATH)/Register: $(OBJECTS)
 	test -d $(BIN_PATH) || mkdir -p $(BIN_PATH)

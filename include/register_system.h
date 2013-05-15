@@ -115,7 +115,7 @@ class RegisterSystem: public RegisterObject {
         //Helper classes to delete student
         class delStuId {
             public:
-                delStuId(string _id):id(_id);
+                delStuId(string _id):id(_id) {}
                 bool operator()(const RegisterCourseSelection* r) {
                     return r->getStuId() == id;
                 }
@@ -124,13 +124,11 @@ class RegisterSystem: public RegisterObject {
                 }
             private:
                 string id;
-        }
-        class delCourseSelection {
-            bool operator()(RegisterCourseSelection* r) {
-                delStuId t(r->getStuId());
-                CourseSelectionCode.remove(r->getCode(), t);
-            }
         };
+        void delCourseSelection(RegisterCourseSelection* r){
+            delStuId t(r->getStuId());
+            CourseSelectionCode.remove<delStuId>(r->getCode(), t);
+        }
 };
 
 #endif

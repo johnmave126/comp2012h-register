@@ -90,7 +90,7 @@ class Hashmap {
          * return the number of items deleted
          */
         template<class CompRemove>
-        int remove(const Key& hashKey, const CompRemove& _comp = CompRemove());
+        int remove(const Key& hashKey, CompRemove& _comp = CompRemove());
 
         /*
          * query
@@ -111,7 +111,7 @@ class Hashmap {
          * apply the callback to all the items with hashKey
          */
         template<class Callback>
-        void apply(const Key& hashKey, const Callback& _cbk) const;
+        void apply(const Key& hashKey, Callback& _cbk) const;
 
         /*
          * dump
@@ -130,7 +130,7 @@ class Hashmap {
         //Comparator for Node
         class _Compare {
             public:
-                _Compare(Compare _cmp): cmp(_cmp) {}
+                _Compare(Compare &_cmp): cmp(_cmp) {}
                 _Compare& operator=(const _Compare& c) {
                     cmp = c.cmp;
                 }
@@ -633,9 +633,9 @@ void Hashmap<Key, Value, Hasher, Compare>::insert(const Key& hashKey, const Valu
 
 template<typename Key, typename Value, class Hasher, class Compare>
 template<class CompRemove>
-int Hashmap<Key, Value, Hasher, Compare>::remove(const Key& hashKey, const CompRemove& _comp) {
+int Hashmap<Key, Value, Hasher, Compare>::remove(const Key& hashKey, CompRemove& _comp) {
     //Use custom remove function
-    int cnt = arr_bucket[hashFunctoin(hashKey, slotn)].remove<_CustomRemove>(_CustomRemove<CompRemove>(hashKey, _comp));
+    int cnt = arr_bucket[hashFunctoin(hashKey, slotn)]->remove<_CustomRemove>(_CustomRemove<CompRemove>(hashKey, _comp));
     length -= cnt;
     return cnt;
 }
@@ -646,9 +646,9 @@ typename Hashmap<Key, Value, Hasher, Compare>::Iterator Hashmap<Key, Value, Hash
     return Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
 }
 
-template<typename Key, typename Value, class Hasher, class Compare>
+template<typename Key, typename Value, class Hashe/r, class Compare>
 template<class Callback>
-void Hashmap<Key, Value, Hasher, Compare>::apply(const Key& hashKey, const Callback& _cbk) const {
+void Hashmap<Key, Value, Hasher, Compare>::apply(const Key& hashKey, Callback& _cbk) const {
     Iterator itr = Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
     try {
         while(true) {
