@@ -144,6 +144,7 @@ class Hashmap {
         //Comparator for Node
         class _Compare {
             public:
+                _Compare() {}
                 _Compare(const Compare &_cmp): cmp(_cmp) {}
                 _Compare& operator=(const _Compare& c) {
                     cmp = c.cmp;
@@ -309,11 +310,14 @@ class Hashmap<Key, Value, Hasher, Compare>::Iterator_All {
 
         //Current one
         typename SortList<Node, _Compare>::Iterator* current;
+
+        _Compare comp;
 };
 
 /* Hashmap Iterator_All */
 template<typename Key, typename Value, class Hasher, class Compare>
-Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All() {
+Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All()
+:size(0), arr_itr(NULL) {
 }
 
 template<typename Key, typename Value, class Hasher, class Compare>
@@ -331,11 +335,12 @@ Hashmap<Key, Value, Hasher, Compare>::Iterator_All::~Iterator_All() {
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All(const Hashmap<Key, Value, Hasher, Compare>& h)
 :size(h.slotn),
- arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]) {
+ arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]),
+ comp(h.comp) {
     int i;
     //Init the Iterator list
     for(i = 0; i < size; i++) {
-        arr_itr[i] = new typename SortList<Node, _Compare>::Iterator(h.arr_bucket[i]);
+        arr_itr[i] = new typename SortList<Node, _Compare>::Iterator(*(h.arr_bucket[i]));
     }
     //Clean up
     removeNull();
@@ -346,7 +351,8 @@ Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All(const Hashmap<K
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Iterator_All::Iterator_All(const Hashmap<Key, Value, Hasher, Compare>::Iterator_All& itr)
 :size(itr.size),
- arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]) {
+ arr_itr(new typename SortList<Node, _Compare>::Iterator*[size]),
+ comp(itr.comp) {
     int i;
     //Init the Iterator list
     for(i = 0; i < size; i++) {
@@ -444,8 +450,8 @@ void Hashmap<Key, Value, Hasher, Compare>::Iterator_All::removeNull() {
         catch(runtime_error& e) {
             //Remove
             delete arr_itr[i];
-            arr_bucket[i] = NULL;
-            arr_bucket[i] = arr_bucket[size - 1];
+            arr_itr[i] = NULL;
+            arr_itr[i] = arr_itr[size - 1];
             size--;
             continue;
         }

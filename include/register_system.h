@@ -132,6 +132,24 @@ class RegisterSystem: public RegisterObject {
 
         //End Course Registration
 
+        //Begin Report Management
+
+        /*
+         * allStudents
+         *
+         * handle when generate all student page
+         */
+        int allStudents();
+
+        /*
+         * allCourses
+         *
+         * handle when generate all course page
+         */
+        int allCourses();
+
+        //End Report Management
+
         /*
          * exec
          *

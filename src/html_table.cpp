@@ -51,6 +51,7 @@ void HTMLTable::begin() {
     if(fstate != ready) {
         throw runtime_error("Cannot insert head at this state");
     }
+    fstate = opened;
     //The open of a table
     file->openTag("table", "table table-striped table-hover");
     file->openTag("caption");

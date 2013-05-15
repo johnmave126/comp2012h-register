@@ -113,7 +113,8 @@ void RegisterSystem::init_verifier() {
 }
 
 void RegisterSystem::init_menu() {
-    RegisterMenu *student_manager, *course_manager, *course_registration;
+    RegisterMenu *student_manager, *course_manager, *course_registration,
+        *report_manager;
 
     //Creation of student management
     student_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Student Menu)");
@@ -139,6 +140,11 @@ void RegisterSystem::init_menu() {
     course_registration->insertItem("Query Registration", this, "queryRegistration");
     menu.insertItem("Course Registration", course_registration);
 
+    //Creation of report management
+    report_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Report Generation Menu)");
+    report_manager->insertItem("List all student information", this, "allStudents");
+    report_manager->insertItem("List all course information", this, "allCourses");
+    menu.insertItem("Report Management", report_manager);
 }
 
 RegisterSystem::RegType RegisterSystem::methods[] = {
@@ -156,6 +162,9 @@ RegisterSystem::RegType RegisterSystem::methods[] = {
     {"dropCourse", &RegisterSystem::dropCourse},
     {"modifyExamMark", &RegisterSystem::modifyExamMark},
     {"queryRegistration", &RegisterSystem::queryRegistration},
+
+    {"allStudents", &RegisterSystem::allStudents},
+    {"allCourses", &RegisterSystem::allCourses},
     {0, 0}
 };
 REGISTER_EVENT_FNC(RegisterSystem)

@@ -27,7 +27,7 @@ class HTMLTable {
         ~HTMLTable();
 
         /* conversion constructor */
-        HTMLTable(HTMLFile *_file, string _title, bool index = true);
+        HTMLTable(HTMLFile *_file, string _title = "", bool index = true);
 
         /* copy constructor */
         HTMLTable(HTMLTable&);
