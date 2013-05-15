@@ -68,6 +68,38 @@ class RegisterSystem: public RegisterObject {
 
         //End Student Management
 
+        //Begin Course Management
+
+        /*
+         * insertCourse
+         *
+         * handle when insert course
+         */
+        int insertCourse();
+
+        /*
+         * modifyCourse
+         *
+         * handle when modify course
+         */
+        int modifyCourse();
+
+        /*
+         * deleteCourse
+         *
+         * handle when delete course
+         */
+        int deleteCourse();
+
+        /*
+         * queryCourse
+         *
+         * handle when query course
+         */
+        int queryCourse();
+
+        //End Course Management
+
         /*
          * exec
          *

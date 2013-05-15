@@ -105,7 +105,7 @@ void RegisterSystem::init_verifier() {
     //Course Name
     verifier.insert("CourseName", "^\\w[\\w ]{0,49}$");
     //Course Credit
-    verifier.insert("Credit", "^0*[12345]$");
+    verifier.insert("Credit", "^0*[012345]$");
     //Course Mark
     verifier.insert("Mark", "^0*(100|\\d{1,2})$");
     //Course Mark for import
@@ -113,7 +113,7 @@ void RegisterSystem::init_verifier() {
 }
 
 void RegisterSystem::init_menu() {
-    RegisterMenu *student_manager;
+    RegisterMenu *student_manager, *course_manager;
 
     //Creation of student management
     student_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Student Menu)");
@@ -123,6 +123,14 @@ void RegisterSystem::init_menu() {
     student_manager->insertItem("Query Student Record", this, "queryStudent");
     menu.insertItem("Student Management", student_manager);
 
+    //Creation of course management
+    course_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Course Menu)");
+    course_manager->insertItem("Insert Course Record", this, "insertCourse");
+    course_manager->insertItem("Modify Course Record", this, "modifyCourse");
+    course_manager->insertItem("Delete Course Record", this, "deleteCourse");
+    course_manager->insertItem("Query Course Record", this, "queryCourse");
+    menu.insertItem("Course Management", course_manager);
+
 }
 
 RegisterSystem::RegType RegisterSystem::methods[] = {
@@ -130,6 +138,11 @@ RegisterSystem::RegType RegisterSystem::methods[] = {
     {"modifyStudent", &RegisterSystem::modifyStudent},
     {"deleteStudent", &RegisterSystem::deleteStudent},
     {"queryStudent", &RegisterSystem::queryStudent},
+
+    {"insertCourse", &RegisterSystem::insertCourse},
+    {"modifyCourse", &RegisterSystem::modifyCourse},
+    {"deleteCourse", &RegisterSystem::deleteCourse},
+    {"queryCourse", &RegisterSystem::queryCourse},
     {0, 0}
 };
 REGISTER_EVENT_FNC(RegisterSystem)
