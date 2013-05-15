@@ -1,7 +1,7 @@
 CC=gcc
 CPP=g++
 LINK=g++
-LFLAGS=-fstack-protector
+LFLAGS=-fstack-protector -g
 LIBS=
 AR=ar
 RM=rm
@@ -9,6 +9,7 @@ CP=cp
 INCPATH=-Iinclude -I.
 CFLAGS=-O0 -Wextra -Wall -g -fexceptions -fstack-protector -Wno-unused-parameter
 CPPFLAGS=$(CFLAGS)
+MAKE=make
 
 TMP_PATH=build_tmp
 BIN_PATH=build_bin
@@ -52,9 +53,9 @@ OBJECTS = build_tmp/html_utility.o \
 		build_tmp/register_system.o \
 		build_tmp/register_student_management.o
 
-all: Register
+all: Makefile.control $(BIN_PATH)/Register
 
-Register: $(OBJECTS)
+$(BIN_PATH)/Register: $(OBJECTS)
 	test -d $(BIN_PATH) || mkdir -p $(BIN_PATH)
 	$(LINK) $(LFLAGS) -o $(BIN_PATH)/Register $(OBJECTS) $(LIBS)
 
@@ -128,6 +129,12 @@ build_tmp/register.o:  src/register.cpp include/register_common.h \
  include/register_course_selection.h
 	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register.o src/register.cpp
+
+build_tmp/Makefile.control: Makefile
+	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
+	touch $(TMP_PATH)/Makefile.control
+	$(MAKE) clean
+	$(MAKE) all
 
 .PHONY: clean
 clean:
