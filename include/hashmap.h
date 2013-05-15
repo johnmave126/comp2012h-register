@@ -646,7 +646,7 @@ typename Hashmap<Key, Value, Hasher, Compare>::Iterator Hashmap<Key, Value, Hash
     return Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
 }
 
-template<typename Key, typename Value, class Hashe/r, class Compare>
+template<typename Key, typename Value, class Hasher, class Compare>
 template<class Callback>
 void Hashmap<Key, Value, Hasher, Compare>::apply(const Key& hashKey, Callback& _cbk) const {
     Iterator itr = Iterator(*arr_bucket[hashFunctoin(hashKey, slotn)], hashKey);
