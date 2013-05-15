@@ -53,6 +53,9 @@ void HTMLTable::begin() {
     }
     //The open of a table
     file->openTag("table", "table table-striped table-hover");
+    file->openTag("caption");
+    file->writeString(title);
+    file->closeTag();
     //Writing head 
     file->openTag("thead");
     file->openTag("tr");
