@@ -60,7 +60,7 @@ static int hashCode(const string& code, int m) {
     return ans;
 }
 
-static bool cmpCSp(RegisterCourseSelection*& a, RegisterCourseSelection*& b) {
+static bool cmpCSp(RegisterCourseSelection* const & a, RegisterCourseSelection* const & b) {
     return (*a) < (*b);
 }
 
@@ -113,7 +113,7 @@ void RegisterSystem::init_verifier() {
 }
 
 void RegisterSystem::init_menu() {
-    RegisterMenu *student_manager, *course_manager;
+    RegisterMenu *student_manager, *course_manager, *course_registration;
 
     //Creation of student management
     student_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Student Menu)");
@@ -131,6 +131,14 @@ void RegisterSystem::init_menu() {
     course_manager->insertItem("Query Course Record", this, "queryCourse");
     menu.insertItem("Course Management", course_manager);
 
+    //Creation of course registration
+    course_registration = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Registration Menu)");
+    course_registration->insertItem("Add Course", this, "addCourse");
+    course_registration->insertItem("Drop Course", this, "dropCourse");
+    course_registration->insertItem("Modify Exam Mark", this, "modifyExamMark");
+    course_registration->insertItem("Query Registration", this, "queryRegistration");
+    menu.insertItem("Course Registration", course_registration);
+
 }
 
 RegisterSystem::RegType RegisterSystem::methods[] = {
@@ -143,6 +151,11 @@ RegisterSystem::RegType RegisterSystem::methods[] = {
     {"modifyCourse", &RegisterSystem::modifyCourse},
     {"deleteCourse", &RegisterSystem::deleteCourse},
     {"queryCourse", &RegisterSystem::queryCourse},
+
+    {"addCourse", &RegisterSystem::addCourse},
+    {"dropCourse", &RegisterSystem::dropCourse},
+    {"modifyExamMark", &RegisterSystem::modifyExamMark},
+    {"queryRegistration", &RegisterSystem::queryRegistration},
     {0, 0}
 };
 REGISTER_EVENT_FNC(RegisterSystem)

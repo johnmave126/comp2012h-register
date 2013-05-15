@@ -100,6 +100,38 @@ class RegisterSystem: public RegisterObject {
 
         //End Course Management
 
+        //Begin Course Registration
+
+        /*
+         * addCourse
+         *
+         * handle when add course
+         */
+        int addCourse();
+
+        /*
+         * dropCourse
+         *
+         * handle when drop course
+         */
+        int dropCourse();
+
+        /*
+         * modifyExamMark
+         *
+         * handle when modify exam mark
+         */
+        int modifyExamMark();
+
+        /*
+         * queryRegistration
+         *
+         * handle when query registration
+         */
+        int queryRegistration();
+
+        //End Course Registration
+
         /*
          * exec
          *
@@ -141,10 +173,11 @@ class RegisterSystem: public RegisterObject {
         SortList<RegisterCourseSelection> DataCourseSelections;
 
         //The extra indices
-        Hashmap<string, RegisterCourseSelection*, int(*)(const string&, int), bool(*)(RegisterCourseSelection*&, RegisterCourseSelection*&)> CourseSelectionID;
-        Hashmap<string, RegisterCourseSelection*, int(*)(const string&, int), bool(*)(RegisterCourseSelection*&, RegisterCourseSelection*&)> CourseSelectionCode;
+        typedef Hashmap<string, RegisterCourseSelection*, int(*)(const string&, int), bool(*)(RegisterCourseSelection* const &, RegisterCourseSelection* const &)> spHasp;
+        spHasp CourseSelectionID;
+        spHasp CourseSelectionCode;
 
-        //Helper classes to delete student
+        //Helper classes to delete things
         class delStuId {
             public:
                 delStuId(string _id):id(_id) {}
@@ -156,6 +189,30 @@ class RegisterSystem: public RegisterObject {
                 }
             private:
                 string id;
+        };
+        class delCode {
+            public:
+                delCode(string _code):code(_code) {}
+                bool operator()(const RegisterCourseSelection* r) {
+                    return r->getCode() == code;
+                }
+                bool operator()(const RegisterCourseSelection& r) {
+                    return r.getCode() == code;
+                }
+            private:
+                string code;
+        };
+        class delIdCode {
+            public:
+                delIdCode(string _id, string _code):id(_id), code(_code) {}
+                bool operator()(const RegisterCourseSelection* r) {
+                    return r->getStuId() == id && r->getCode() == code;
+                }
+                bool operator()(const RegisterCourseSelection& r) {
+                    return r.getStuId() == id && r.getCode() == code;
+                }
+            private:
+                string id, code;
         };
         class delCourseSelection {
             public:

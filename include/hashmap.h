@@ -147,6 +147,7 @@ class Hashmap {
                 _Compare(const Compare &_cmp): cmp(_cmp) {}
                 _Compare& operator=(const _Compare& c) {
                     cmp = c.cmp;
+                    return (*this);
                 }
                 bool operator()(const Node &a, const Node &b) {
                     return cmp(a.val, b.val);
