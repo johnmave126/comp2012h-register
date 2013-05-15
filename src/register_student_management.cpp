@@ -150,13 +150,15 @@ int RegisterSystem::deleteStudent() {
         }
         
         //Delete in Course Code index
-        CourseSelectionID.apply(input, delCourseSelection());
+        delCourseSelection tmpDelCS(this);
+        CourseSelectionID.apply(input, tmpDelCS);
 
         //Delete in Course ID index
         CourseSelectionID.remove(input);
 
         //Delete in Course SortList
-        DataCourseSelections.remove(delStuId(input));
+        delStuId tmpDelSI(input);
+        DataCourseSelections.remove(tmpDelSI);
 
         //Delete in Student Database
         DataStudents.remove(input);

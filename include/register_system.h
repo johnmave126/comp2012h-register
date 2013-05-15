@@ -125,10 +125,16 @@ class RegisterSystem: public RegisterObject {
             private:
                 string id;
         };
-        void delCourseSelection(RegisterCourseSelection* r){
-            delStuId t(r->getStuId());
-            CourseSelectionCode.remove<delStuId>(r->getCode(), t);
-        }
+        class delCourseSelection {
+            public:
+                delCourseSelection(RegisterSystem *_sys): sys(_sys) {}
+                void operator()(RegisterCourseSelection* r) {
+                    delStuId t(r->getStuId());
+                    sys->CourseSelectionCode.remove(r->getCode(), t);
+                }
+            private:
+                RegisterSystem *sys;
+        };
 };
 
 #endif

@@ -77,7 +77,21 @@ class Hashmap {
          * a simpler version to accompany the function below
          */
         int remove(const Key& hashKey) {
-            return remove<ReturnTrue<Node> >(hashKey);
+            return remove<ReturnTrue<Value> >(hashKey);
+        }
+
+        /*
+         * remove
+         *
+         * hashKey: the key of the items
+         *
+         * delete all the item meet requirement in Hashmap
+         * a simpler version to accompany the function below
+         */
+        template<class CompRemove>
+        int remove(const Key& hashKey) {
+            CompRemove t = CompRemove();
+            return remove<CompRemove>(hashKey, t);
         }
 
         /*
@@ -90,7 +104,7 @@ class Hashmap {
          * return the number of items deleted
          */
         template<class CompRemove>
-        int remove(const Key& hashKey, CompRemove& _comp = CompRemove());
+        int remove(const Key& hashKey, CompRemove& _comp);
 
         /*
          * query
@@ -130,7 +144,7 @@ class Hashmap {
         //Comparator for Node
         class _Compare {
             public:
-                _Compare(Compare &_cmp): cmp(_cmp) {}
+                _Compare(const Compare &_cmp): cmp(_cmp) {}
                 _Compare& operator=(const _Compare& c) {
                     cmp = c.cmp;
                 }
@@ -635,7 +649,8 @@ template<typename Key, typename Value, class Hasher, class Compare>
 template<class CompRemove>
 int Hashmap<Key, Value, Hasher, Compare>::remove(const Key& hashKey, CompRemove& _comp) {
     //Use custom remove function
-    int cnt = arr_bucket[hashFunctoin(hashKey, slotn)]->remove<_CustomRemove>(_CustomRemove<CompRemove>(hashKey, _comp));
+    _CustomRemove<CompRemove> t = _CustomRemove<CompRemove>(hashKey, _comp);
+    int cnt = arr_bucket[hashFunctoin(hashKey, slotn)]->remove<_CustomRemove<CompRemove> >(t);
     length -= cnt;
     return cnt;
 }
