@@ -103,7 +103,7 @@ void RegisterSystem::init_verifier() {
     //Course Code
     verifier.insert("Code", "^\\C{4}[\\C\\d]{3,4}$");
     //Course Name
-    verifier.insert("CourseName", "^\\w[\\w ]{0,49}$");
+    verifier.insert("CourseName", "^[^ ].{0,49}$");
     //Course Credit
     verifier.insert("Credit", "^0*[012345]$");
     //Course Mark
