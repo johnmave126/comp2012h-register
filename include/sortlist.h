@@ -59,8 +59,10 @@ class SortList {
          * item: the item to add
          *
          * insert the item into the sortlist
+         * return the address of the item stored
+         * @warning: avoid using this pointer because it is dangerous
          */
-        inline void insert(T item);
+        inline T* insert(T item);
 
         /*
          * remove
@@ -720,7 +722,7 @@ inline int SortList<T, Compare>::size() const {
 }
 
 template<typename T, class Compare>
-inline void SortList<T, Compare>::insert(T item) {
+inline T* SortList<T, Compare>::insert(T item) {
     Node *t = new Node(item);
     Node *p = head->next;
     //Increase reference count
@@ -736,6 +738,8 @@ inline void SortList<T, Compare>::insert(T item) {
     p->prev = t;
     //Increase size
     length++;
+
+    return t->data;
 }
 
 template<typename T, class Compare>

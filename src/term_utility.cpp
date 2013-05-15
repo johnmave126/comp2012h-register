@@ -103,6 +103,6 @@ void Term::restore() {
 
 void Term::pause() {
     string tmp;
-    cout << "Hit ENTER to continue... \n";
+    cout << "\nHit ENTER to continue... \n";
     getline(cin, tmp);
 }

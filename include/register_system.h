@@ -111,6 +111,26 @@ class RegisterSystem: public RegisterObject {
         //The extra indices
         Hashmap<string, RegisterCourseSelection*, int(*)(const string&, int), bool(*)(RegisterCourseSelection*&, RegisterCourseSelection*&)> CourseSelectionID;
         Hashmap<string, RegisterCourseSelection*, int(*)(const string&, int), bool(*)(RegisterCourseSelection*&, RegisterCourseSelection*&)> CourseSelectionCode;
+
+        //Helper classes to delete student
+        class delStuId {
+            public:
+                delStuId(string _id):id(_id);
+                bool operator()(const RegisterCourseSelection* r) {
+                    return r->getStuId() == id;
+                }
+                bool operator()(const RegisterCourseSelection& r) {
+                    return r.getStuId() == id;
+                }
+            private:
+                string id;
+        }
+        class delCourseSelection {
+            bool operator()(RegisterCourseSelection* r) {
+                delStuId t(r->getStuId());
+                CourseSelectionCode.remove(r->getCode(), t);
+            }
+        };
 };
 
 #endif

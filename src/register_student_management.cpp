@@ -58,7 +58,7 @@ int RegisterSystem::insertStudent() {
         }
         student.setYear(input);
 
-        //Get student year
+        //Get student gender
         cout << "Enter the student gender [M,F]: ";
         getline(cin, input);
         while(!verifier.verify("Gender", input)) {
@@ -80,7 +80,7 @@ int RegisterSystem::insertStudent() {
 
 int RegisterSystem::modifyStudent() {
     string input;
-    RegisterStudent student;
+    RegisterStudent *student;
     do {
         //Get student id
         cout << "Enter the student ID: ";
@@ -90,53 +90,50 @@ int RegisterSystem::modifyStudent() {
             getline(cin, input);
         }
         //Check existence
-        if(DataStudents[input]) {
-            cout << "Student already exist" << endl;
+        student = DataStudents[input];
+        if(!student) {
+            cout << "Student not exist" << endl;
             break;
         }
-        student.setStuId(input);
 
         //Get student name
-        cout << "Enter the student name: ";
+        cout << "Enter the student name [" << student->getStuName() << "]: ";
         getline(cin, input);
         while(!verifier.verify("StuName", input)) {
             cout << "Invalid input, re-enter again [student name]: ";
             getline(cin, input);
         }
-        student.setStuName(input);
+        student->setStuName(input);
 
         //Get student year
-        cout << "Enter the student year [1-3]: ";
+        cout << "Enter the student year [" << student->getYear() << "]: ";
         getline(cin, input);
         while(!verifier.verify("Year", input)) {
             cout << "Invalid input, re-enter again [student year]: ";
             getline(cin, input);
         }
-        student.setYear(input);
+        student->setYear(input);
 
-        //Get student year
-        cout << "Enter the student gender [M,F]: ";
+        //Get student gender
+        cout << "Enter the student gender [" << student->getGender() << "]: ";
         getline(cin, input);
         while(!verifier.verify("Gender", input)) {
             cout << "Invalid input, re-enter again [MF]: ";
             getline(cin, input);
         }
-        student.setGender(input);
-
-        //Insert the student
-        DataStudents.insert(student.getStuId(), student);
+        student->setGender(input);
 
         //Output success message
-        cout << "Creation of student record successful" << endl;
+        cout << "Modification of student record successful" << endl;
     }while(false);
-    
+
     terminal->pause();
     return 0;
 }
 
 int RegisterSystem::deleteStudent() {
     string input;
-    RegisterStudent student;
+    RegisterStudent* student;
     do {
         //Get student id
         cout << "Enter the student ID: ";
@@ -146,44 +143,26 @@ int RegisterSystem::deleteStudent() {
             getline(cin, input);
         }
         //Check existence
-        if(DataStudents[input]) {
-            cout << "Student already exist" << endl;
+        student = DataStudents[input];
+        if(!student) {
+            cout << "Student not exist" << endl;
             break;
         }
-        student.setStuId(input);
+        
+        //Delete in Course Code index
+        CourseSelectionID.apply(input, delCourseSelection());
 
-        //Get student name
-        cout << "Enter the student name: ";
-        getline(cin, input);
-        while(!verifier.verify("StuName", input)) {
-            cout << "Invalid input, re-enter again [student name]: ";
-            getline(cin, input);
-        }
-        student.setStuName(input);
+        //Delete in Course ID index
+        CourseSelectionID.remove(input);
 
-        //Get student year
-        cout << "Enter the student year [1-3]: ";
-        getline(cin, input);
-        while(!verifier.verify("Year", input)) {
-            cout << "Invalid input, re-enter again [student year]: ";
-            getline(cin, input);
-        }
-        student.setYear(input);
+        //Delete in Course SortList
+        DataCourseSelections.remove(delStuId(input));
 
-        //Get student year
-        cout << "Enter the student gender [M,F]: ";
-        getline(cin, input);
-        while(!verifier.verify("Gender", input)) {
-            cout << "Invalid input, re-enter again [MF]: ";
-            getline(cin, input);
-        }
-        student.setGender(input);
-
-        //Insert the student
-        DataStudents.insert(student.getStuId(), student);
+        //Delete in Student Database
+        DataStudents.remove(input);
 
         //Output success message
-        cout << "Creation of student record successful" << endl;
+        cout << "Deletion of student record successful" << endl;
     }while(false);
     
     terminal->pause();
@@ -192,7 +171,7 @@ int RegisterSystem::deleteStudent() {
 
 int RegisterSystem::queryStudent() {
     string input;
-    RegisterStudent student;
+    RegisterStudent *student;
     do {
         //Get student id
         cout << "Enter the student ID: ";
@@ -202,44 +181,19 @@ int RegisterSystem::queryStudent() {
             getline(cin, input);
         }
         //Check existence
-        if(DataStudents[input]) {
-            cout << "Student already exist" << endl;
+        student = DataStudents[input];
+        if(!student) {
+            cout << "Student not exist" << endl;
             break;
         }
-        student.setStuId(input);
 
-        //Get student name
-        cout << "Enter the student name: ";
-        getline(cin, input);
-        while(!verifier.verify("StuName", input)) {
-            cout << "Invalid input, re-enter again [student name]: ";
-            getline(cin, input);
-        }
-        student.setStuName(input);
-
-        //Get student year
-        cout << "Enter the student year [1-3]: ";
-        getline(cin, input);
-        while(!verifier.verify("Year", input)) {
-            cout << "Invalid input, re-enter again [student year]: ";
-            getline(cin, input);
-        }
-        student.setYear(input);
-
-        //Get student year
-        cout << "Enter the student gender [M,F]: ";
-        getline(cin, input);
-        while(!verifier.verify("Gender", input)) {
-            cout << "Invalid input, re-enter again [MF]: ";
-            getline(cin, input);
-        }
-        student.setGender(input);
-
-        //Insert the student
-        DataStudents.insert(student.getStuId(), student);
-
-        //Output success message
-        cout << "Creation of student record successful" << endl;
+        //Put information
+        cout << endl;
+        cout << "ID:     " << student->getStuId() << endl;
+        cout << "Name:   " << student->getStuName() << endl;
+        cout << "Year:   " << student->getYear() << endl;
+        cout << "Gender: " << ((student->getGender() == "M")?("Male"):("Female")) << endl;
+        
     }while(false);
     
     terminal->pause();
