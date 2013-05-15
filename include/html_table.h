@@ -4,34 +4,42 @@
  * Stu ID: 20090398
  * 2013 Spring
  *
- * html_utility.h
+ * html_table.h
  *
- * header file for some html generating utilities
+ * header file for some table support of HTML
  */
 
-#ifndef _HTML_UTILITY_H
-#define _HTML_UTILITY_H
+#ifndef _HTML_TABLE_H
+#define _HTML_TABLE_H
 
+#include "html_utility.h"
 #include "deque.h"
 #include <string>
-#include <fstream>
 
-using std::ofstream;
 using std::string;
 
 //Output file of html
-class HTMLFile {
+class HTMLTable {
     public:
 
         /* default constructor/destructor */
-        HTMLFile();
-        ~HTMLFile();
+        HTMLTable();
+        ~HTMLTable();
 
         /* conversion constructor */
-        HTMLFile(const char fileName[], const char title[]);
+        HTMLTable(HTMLFile *_file, string _title, bool index = true);
 
         /* copy constructor */
-        HTMLFile(HTMLFile&);
+        HTMLTable(HTMLTable&);
+
+        /*
+         * insertHead
+         *
+         * _head: a head to add
+         *
+         * Add the head to the table
+         */
+        void insertHead(string _head);
 
         /*
          * begin
@@ -50,30 +58,27 @@ class HTMLFile {
         void end();
 
         /*
-         * openTag
+         * beginRow
          *
-         * tagName: the tag to open
-         * className: the class to append
-         *
-         * Add a tag to the current file
+         * Start a row
          */
-        void openTag(const char tagName[], const char className[]="");
+        void beginRow();
 
         /*
-         * closeTag
+         * endRow
          *
-         * Close the current tag
+         * End the current row
          */
-        void closeTag();
+        void endRow();
 
         /*
-         * writeString
+         * insertCell
          *
-         * content: the content to add
+         * content: the content in the cell
          *
-         * Write a series of content to html file
+         * Add a cell in the table
          */
-        void writeString(string content);
+        void insertCell(string content);
 
         //Sate of the current file
         enum state {
@@ -90,13 +95,12 @@ class HTMLFile {
         state getState() {return fstate;}
 
     private:
-        string file, html_title;
-
-        ofstream os;
-
+        HTMLFile *file;
+        string title;
         state fstate;
+        int idx;
 
-        Deque<string> tag_stack;
+        Deque<string> heads;
 };
 
 #endif

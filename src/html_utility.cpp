@@ -14,6 +14,9 @@
 #include "bootstrap.h"
 #include "deque.h"
 #include <cstring>
+#include <string>
+
+using std::string;
 
 static const char header_first[] = 
 "<!DOCTYPE html>\n"
@@ -38,8 +41,31 @@ static const char html_final[] =
 "</html>\n"
 "\n";
 
+static string escape(string str) {
+    size_t i = 0;
+    while(i < str.length()) {
+        switch(str[i]) {
+            case '&':
+                str.replace(i, 1, "&amp;");
+                i += 5;
+                break;
+            case '<':
+                str.replace(i, 1, "&lt;");
+                i += 4;
+                break;
+            case '>':
+                str.replace(i, 1, "&rt;");
+                i += 4;
+                break;
+            default:
+                i++;
+        }
+    }
+    return str;
+}
+
 HTMLFile::HTMLFile()
-:file(NULL), html_title(NULL), fstate(ready) {
+:fstate(ready) {
     os.exceptions(ofstream::failbit | ofstream::badbit);
 }
 
@@ -47,28 +73,20 @@ HTMLFile::~HTMLFile() {
     if(os.is_open()) {
         os.close();
     }
-    if(file) {
-        delete [] file;
-    }
-    if(html_title) {
-        delete [] html_title;
-    }
 }
 
 HTMLFile::HTMLFile(const char fileName[], const char title[])
-:file(new char[strlen(fileName) + 1]),
- html_title(new char[strlen(title) + 1]),
+:file(fileName),
+ html_title(title),
  fstate(ready) {
-    strcpy(file, fileName);
-    strcpy(html_title, title);
     os.exceptions(ofstream::failbit | ofstream::badbit);
  }
 
 void HTMLFile::begin() {
-    if(!file || strlen(file) == 0) {
+    if(file.length() == 0) {
         throw "No file name specified";
     }
-    os.open(file, ofstream::out | ofstream::trunc);
+    os.open(file.c_str(), ofstream::out | ofstream::trunc);
 
     fstate = opened;
 
@@ -102,7 +120,7 @@ void HTMLFile::openTag(const char tagName[], const char className[]) {
     if(!tagName || strlen(tagName) == 0) {
         throw "Empty Tag";
     }
-    os << "<" << tagName << " ";
+    os << "<" << escape(tagName) << " ";
     if(className && strlen(className) > 0) {
         os << "class=\"" << className << "\"";
     }
@@ -118,6 +136,6 @@ void HTMLFile::closeTag() {
     os << "\n</" << tag_stack.removeLast() << ">\n";
 }
 
-void HTMLFile::writeString(const char content[]) {
-    os << content;
+void HTMLFile::writeString(string content) {
+    os << escape(content);
 }

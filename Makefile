@@ -16,6 +16,7 @@ BIN_PATH=build_bin
 
 HEADERS = include/bootstrap.h \
 		include/html_utility.h \
+		include/html_table.h \
 		include/deque.h \
 		include/sortlist.h \
 		include/register_common.h \
@@ -29,6 +30,7 @@ HEADERS = include/bootstrap.h \
 		include/register_course_selection.h \
 		include/register_system.h
 SOURCES = src/html_utility.cpp \
+		src/html_table.cpp \
 		src/term_utility.cpp \
 		src/register.cpp \
 		src/register_menu.cpp \
@@ -43,6 +45,7 @@ SOURCES = src/html_utility.cpp \
 		src/register_course_management.cpp \
 		src/register_course_registration.cpp
 OBJECTS = build_tmp/html_utility.o \
+		build_tmp/html_table.o \
 		build_tmp/term_utility.o \
 		build_tmp/register.o \
 		build_tmp/register_menu.o \
@@ -67,6 +70,12 @@ build_tmp/html_utility.o: src/html_utility.cpp include/html_utility.h \
  include/deque.h include/bootstrap.h include/register_common.h
 	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/html_utility.o src/html_utility.cpp
+
+build_tmp/html_table.o: src/html_table.cpp include/html_table.h \
+ include/html_utility.h include/deque.h include/html_utility.h \
+ include/register_common.h
+	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
+	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/html_table.o src/html_table.cpp
 
 build_tmp/term_utility.o: src/term_utility.cpp include/term_utility.h \
  include/register_common.h
