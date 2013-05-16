@@ -1,13 +1,13 @@
 CC=gcc
 CPP=g++
 LINK=g++
-LFLAGS=-fstack-protector -g
+LFLAGS=-fstack-protector
 LIBS=
 AR=ar
 RM=rm
 CP=cp
 INCPATH=-Iinclude -I.
-CFLAGS=-O0 -Wextra -Wall -g -fexceptions -fstack-protector -Wno-unused-parameter
+CFLAGS=-O3 -Wextra -Wall -fexceptions -fstack-protector -Wno-unused-parameter
 CPPFLAGS=$(CFLAGS)
 MAKE=make
 
