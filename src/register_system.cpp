@@ -95,7 +95,7 @@ void RegisterSystem::init_verifier() {
     //Student ID
     verifier.insert("ID", "^\\d{8}$");
     //Student Name
-    verifier.insert("StuName", "^\\w[\\w \\.]{0,31}$");
+    verifier.insert("StuName", "^\\w[\\w \\.\\d]{0,31}$");
     //Student Year
     verifier.insert("Year", "^0*[123]$");
     //Student Gender
