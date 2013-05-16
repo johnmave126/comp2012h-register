@@ -148,7 +148,39 @@ class RegisterSystem: public RegisterObject {
          */
         int allCourses();
 
+        /*
+         * listCourses
+         *
+         * handle when generate all courses of a student
+         */
+        int listCourses();
+
+        /*
+         * listStudents
+         *
+         * handle when generate all students of a course
+         */
+        int listStudents();
+
         //End Report Management
+
+        //Begin File Management
+
+        /*
+         * saveData
+         *
+         * handle when save data
+         */
+        int saveData();
+
+        /*
+         * loadData
+         *
+         * handle when load data
+         */
+        int loadData();
+
+        //End File Management
 
         /*
          * exec
@@ -243,5 +275,10 @@ class RegisterSystem: public RegisterObject {
                 RegisterSystem *sys;
         };
 };
+
+//Handy hash functions
+int hashStuId(const string& id, int m);
+int hashCode(const string& code, int m);
+bool cmpCSp(RegisterCourseSelection* const & a, RegisterCourseSelection* const & b);
 
 #endif

@@ -75,7 +75,7 @@ HTMLFile::~HTMLFile() {
     }
 }
 
-HTMLFile::HTMLFile(const char fileName[], const char title[])
+HTMLFile::HTMLFile(string fileName, string title)
 :file(fileName),
  html_title(title),
  fstate(ready) {

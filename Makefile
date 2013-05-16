@@ -44,7 +44,8 @@ SOURCES = src/html_utility.cpp \
 		src/register_student_management.cpp \
 		src/register_course_management.cpp \
 		src/register_course_registration.cpp \
-		src/register_report_management.cpp
+		src/register_report_management.cpp \
+		src/register_file_management.cpp
 OBJECTS = build_tmp/html_utility.o \
 		build_tmp/html_table.o \
 		build_tmp/term_utility.o \
@@ -60,7 +61,8 @@ OBJECTS = build_tmp/html_utility.o \
 		build_tmp/register_student_management.o \
 		build_tmp/register_course_management.o \
 		build_tmp/register_course_registration.o \
-		build_tmp/register_report_management.o
+		build_tmp/register_report_management.o \
+		build_tmp/register_file_management.o
 
 all: $(TMP_PATH)/Makefile.control $(BIN_PATH)/Register
 
@@ -163,6 +165,16 @@ build_tmp/register_report_management.o: src/register_report_management.cpp \
  include/deque.h include/html_table.h include/html_utility.h
 	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
 	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register_report_management.o src/register_report_management.cpp
+
+build_tmp/register_file_management.o: src/register_file_management.cpp \
+ include/register_common.h include/register_system.h \
+ include/term_utility.h include/sortlist.h \
+ include/hashmap.h include/register_verifier.h \
+ include/regular_expression.h include/register_menu.h \
+ include/register_student.h include/register_course.h \
+ include/register_course_selection.h
+	test -d $(TMP_PATH) || mkdir -p $(TMP_PATH)
+	$(CPP) -c $(CPPFLAGS) $(INCPATH) -o build_tmp/register_file_management.o src/register_file_management.cpp
 
 build_tmp/register.o:  src/register.cpp include/register_common.h \
  include/term_utility.h include/register_system.h \

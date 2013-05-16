@@ -14,9 +14,12 @@
 #include <string>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 using std::string;
 using std::ostream;
+using std::istream;
+using std::runtime_error;
 
 RegisterCourse::RegisterCourse() {
 }
@@ -34,10 +37,7 @@ void RegisterCourse::serialize(ostream& os) const {
 
     //Code
     tmp = code.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(code.c_str(), code.size());
     buff[0] = 255;
@@ -45,10 +45,7 @@ void RegisterCourse::serialize(ostream& os) const {
 
     //Name
     tmp = name.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(name.c_str(), name.size());
     buff[0] = 255;
@@ -56,10 +53,7 @@ void RegisterCourse::serialize(ostream& os) const {
 
     //Credit
     tmp = credit.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(credit.c_str(), credit.size());
     buff[0] = 255;
@@ -67,4 +61,51 @@ void RegisterCourse::serialize(ostream& os) const {
 
     buff[0] = 0;
     os.write(buff, 1);
+}
+
+void RegisterCourse::recover(istream& is) {
+    char buff[16];
+    int i;
+    unsigned int tmp;
+
+    //Read length of course code
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    code.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        code.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    //Read length of course name
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    name.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        name.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    //Read length of course credit
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    credit.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        credit.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    is.read(buff, 1);
+    if(buff[0] != 0) {
+        throw runtime_error("Corrupted");
+    }
 }

@@ -113,7 +113,7 @@ bool RegExp::matchhere(const char *regex, const char *str) {
                 if(*regex == '(' && *(regex - 1) != '\\') {
                     regex = go_through_pa(regex + 1);
                 }
-                if(*regex == '|' && *(regex - 1) != '\\' ) {
+                else if(*regex == '|' && *(regex - 1) != '\\' ) {
                     v.push_back(string(last_seg, regex - last_seg));
                     last_seg = regex + 1;
                     regex++;

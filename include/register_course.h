@@ -18,6 +18,7 @@
 
 using std::string;
 using std::ostream;
+using std::istream;
 
 class RegisterCourse {
     public:
@@ -98,6 +99,16 @@ class RegisterCourse {
          * output serialization of the course to os
          */
         void serialize(ostream& os) const;
+
+        /*
+         * recover
+         *
+         * is: the input stream
+         *
+         * recover data from input stream
+         * no validation will be made
+         */
+        void recover(istream& is);
     private:
         //The data
         string code, name, credit;

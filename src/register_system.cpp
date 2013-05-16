@@ -31,7 +31,7 @@ using std::string;
 using std::runtime_error;
 
 //Some functions used
-static int hashStuId(const string& id, int m) {
+int hashStuId(const string& id, int m) {
     int base = 1;
     int ans = 0;
     const char* str = id.c_str();
@@ -43,7 +43,7 @@ static int hashStuId(const string& id, int m) {
     return ans;
 }
 
-static int hashCode(const string& code, int m) {
+int hashCode(const string& code, int m) {
     int base = 1;
     int ans = 0;
     const char* str = code.c_str();
@@ -60,7 +60,7 @@ static int hashCode(const string& code, int m) {
     return ans;
 }
 
-static bool cmpCSp(RegisterCourseSelection* const & a, RegisterCourseSelection* const & b) {
+bool cmpCSp(RegisterCourseSelection* const & a, RegisterCourseSelection* const & b) {
     return (*a) < (*b);
 }
 
@@ -114,7 +114,7 @@ void RegisterSystem::init_verifier() {
 
 void RegisterSystem::init_menu() {
     RegisterMenu *student_manager, *course_manager, *course_registration,
-        *report_manager;
+        *report_manager, *file_manager;
 
     //Creation of student management
     student_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Student Menu)");
@@ -144,7 +144,15 @@ void RegisterSystem::init_menu() {
     report_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (Report Generation Menu)");
     report_manager->insertItem("List all student information", this, "allStudents");
     report_manager->insertItem("List all course information", this, "allCourses");
+    report_manager->insertItem("List all courses of a student", this, "listCourses");
+    report_manager->insertItem("List all students of a course", this, "listStudents");
     menu.insertItem("Report Management", report_manager);
+
+    //Creation of file management
+    file_manager = new RegisterMenu(terminal, &menu, "HKUST Course Registration System  (File Menu)");
+    file_manager->insertItem("Save Database", this, "saveData");
+    file_manager->insertItem("Load Database", this, "loadData");
+    menu.insertItem("File Management", file_manager);
 }
 
 RegisterSystem::RegType RegisterSystem::methods[] = {
@@ -165,6 +173,11 @@ RegisterSystem::RegType RegisterSystem::methods[] = {
 
     {"allStudents", &RegisterSystem::allStudents},
     {"allCourses", &RegisterSystem::allCourses},
+    {"listCourses", &RegisterSystem::listCourses},
+    {"listStudents", &RegisterSystem::listStudents},
+
+    {"saveData", &RegisterSystem::saveData},
+    {"loadData", &RegisterSystem::loadData},
     {0, 0}
 };
 REGISTER_EVENT_FNC(RegisterSystem)

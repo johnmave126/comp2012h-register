@@ -101,6 +101,20 @@ int class::fire(int id) {                       \
     return (this->*(methods[id].fnc))();        \
 }                                       
 
+#define PACK_NUMBER(NUM, SLOT)                  \
+{                                               \
+SLOT[0]=static_cast<char>((NUM) >> 24);         \
+SLOT[1]=static_cast<char>(((NUM) >> 16) & 0xFF);\
+SLOT[2]=static_cast<char>(((NUM) >> 8) & 0xFF); \
+SLOT[3]=static_cast<char>((NUM) & 0xFF);        \
+}
+
+#define UNPACK_NUMBER(SLOT)                     \
+((SLOT[3] & 0xFFU)                              \
+ | ((SLOT[2] << 8) & 0xFF00U)                   \
+ | ((SLOT[1] << 16) & 0xFF0000U)                \
+ | ((SLOT[0] << 24) & 0xFF000000U))
+
 //Handy string hash function
 int ELFHash_c(const char *str, int m);
 int ELFHash(const string& str, int m);

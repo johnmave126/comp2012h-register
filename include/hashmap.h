@@ -593,6 +593,16 @@ Hashmap<Key, Value, Hasher, Compare>::Hashmap(Hasher _hash, int _slot, Compare _
 }
 
 template<typename Key, typename Value, class Hasher, class Compare>
+Hashmap<Key, Value, Hasher, Compare>::Hashmap(const Hashmap<Key, Value, Hasher, Compare>& m)
+:comp(m._comp), arr_bucket(new SortList<Node, _Compare>*[m.slotn]),
+ slotn(m.slotn), length(m.length), hashFunctoin(m._hash) {
+    int i;
+    for(i = 0; i < slotn; i++) {
+        arr_bucket[i] = new SortList<Node, _Compare>(*(m.arr_bucket[i]));
+    }
+}
+
+template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::operator=(const Hashmap<Key, Value, Hasher, Compare>& m) {
     int i;
     //Remove the original
@@ -612,7 +622,7 @@ Hashmap<Key, Value, Hasher, Compare>& Hashmap<Key, Value, Hasher, Compare>::oper
     if(m.arr_bucket) {
         arr_bucket = new SortList<Node, _Compare>*[slotn];
         for(i = 0; i < slotn; i++) {
-            arr_bucket[i] = new SortList<Node, _Compare>(m.arr_bucket[i]);
+            arr_bucket[i] = new SortList<Node, _Compare>(*(m.arr_bucket[i]));
         }
     }
 

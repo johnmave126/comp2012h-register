@@ -71,7 +71,8 @@ class SortList {
          * null version, to accompany the function below
          */
         int remove() {
-            return remove<ReturnTrue<T> >();
+            ReturnTrue<T> t = ReturnTrue<T>();
+            return remove<ReturnTrue<T> >(t);
         }
 
         /*
@@ -679,8 +680,10 @@ template<typename T, class Compare>
 SortList<T, Compare>::SortList(const SortList<T, Compare>& q)
 :head(new typename SortList<T, Compare>::Node()),
  end(new typename SortList<T, Compare>::Node()),
- length(0) {
+ length(0), comparator(q.comparator) {
     Node *t;
+    head->next = end;
+    end->prev = head;
     for(t = q.head->next; t->next; t = t->next) {
         //Iterate over the list to do deep copy
         insert(*(t->data));

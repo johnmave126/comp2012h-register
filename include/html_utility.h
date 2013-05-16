@@ -28,7 +28,7 @@ class HTMLFile {
         ~HTMLFile();
 
         /* conversion constructor */
-        HTMLFile(const char fileName[], const char title[]);
+        HTMLFile(string fileName, string title);
 
         /* copy constructor */
         HTMLFile(HTMLFile&);

@@ -18,6 +18,7 @@
 
 using std::string;
 using std::ostream;
+using std::istream;
 
 class RegisterStudent {
     public:
@@ -115,6 +116,16 @@ class RegisterStudent {
          * output serialization of the student to os
          */
         void serialize(ostream& os) const;
+
+        /*
+         * recover
+         *
+         * is: the input stream
+         *
+         * recover data from input stream
+         * no validation will be made
+         */
+        void recover(istream& is);
     private:
         //The data
         string id, name, gender, year;

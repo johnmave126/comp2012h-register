@@ -14,9 +14,12 @@
 #include <string>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 using std::string;
 using std::ostream;
+using std::istream;
+using std::runtime_error;
 
 RegisterStudent::RegisterStudent() {
 }
@@ -34,10 +37,7 @@ void RegisterStudent::serialize(ostream& os) const {
 
     //ID
     tmp = id.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(id.c_str(), id.size());
     buff[0] = 255;
@@ -45,10 +45,7 @@ void RegisterStudent::serialize(ostream& os) const {
 
     //Name
     tmp = name.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(name.c_str(), name.size());
     buff[0] = 255;
@@ -56,10 +53,7 @@ void RegisterStudent::serialize(ostream& os) const {
 
     //Gender
     tmp = gender.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(gender.c_str(), gender.size());
     buff[0] = 255;
@@ -67,10 +61,7 @@ void RegisterStudent::serialize(ostream& os) const {
 
     //Year
     tmp = year.length();
-    buff[0] = static_cast<char>(tmp >> 24);
-    buff[1] = static_cast<char>((tmp >> 16) & 0xFF);
-    buff[2] = static_cast<char>((tmp >> 8) & 0xFF);
-    buff[3] = static_cast<char>(tmp & 0xFF);
+    PACK_NUMBER(tmp, buff)
     os.write(buff, 4);
     os.write(year.c_str(), year.size());
     buff[0] = 255;
@@ -78,4 +69,63 @@ void RegisterStudent::serialize(ostream& os) const {
 
     buff[0] = 0;
     os.write(buff, 1);
+}
+
+void RegisterStudent::recover(istream& is) {
+    char buff[16];
+    int i;
+    unsigned int tmp;
+
+    //Read length of student id
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    id.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        id.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    //Read length of student name
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    name.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        name.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    //Read length of student gender
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    gender.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        gender.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    //Read length of student year
+    is.read(buff, 4);
+    tmp = UNPACK_NUMBER(buff);
+    year.clear();
+    for(i = 0; i < static_cast<int>(tmp); i++) {
+        year.push_back(is.get());
+    }
+    is.read(buff, 1);
+    if(buff[0] != -1) {
+        throw runtime_error("Corrupted");
+    }
+
+    is.read(buff, 1);
+    if(buff[0] != 0) {
+        throw runtime_error("Corrupted");
+    }
 }
