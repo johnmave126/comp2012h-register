@@ -29,6 +29,7 @@
       X-Win32 2012 (X11 server for windows)
       Git (manage code)
       GNU toolchain (compiler)
+      Valgrind (check memory leak)
   
   Source file tree:
       Register
