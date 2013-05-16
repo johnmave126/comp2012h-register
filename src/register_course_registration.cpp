@@ -49,7 +49,7 @@ int RegisterSystem::addCourse() {
         regCourse.setStuId(input);
 
         //Get Course Code
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";
@@ -120,7 +120,7 @@ int RegisterSystem::dropCourse() {
         }
 
         //Get Course Code
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";
@@ -196,7 +196,7 @@ int RegisterSystem::modifyExamMark() {
         }
 
         //Get Course Code
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";
@@ -268,7 +268,7 @@ int RegisterSystem::queryRegistration() {
         }
 
         //Get Course Code
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";

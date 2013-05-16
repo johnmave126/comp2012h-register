@@ -74,7 +74,7 @@ int RegisterSystem::modifyCourse() {
     RegisterCourse *course;
     do {
         //Get course id
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";
@@ -119,10 +119,10 @@ int RegisterSystem::deleteCourse() {
     RegisterCourseSelection** regInfo;
     do {
         //Get course id
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
-            cout << "Invalid input, re-enter again [course Code]: ";
+            cout << "Invalid input, re-enter again [course code]: ";
             getline(cin, input);
         }
         //Check existence
@@ -155,7 +155,7 @@ int RegisterSystem::queryCourse() {
     RegisterCourse *course;
     do {
         //Get course id
-        cout << "Enter the course Code: ";
+        cout << "Enter the course code: ";
         getline(cin, input);
         while(!verifier.verify("Code", input)) {
             cout << "Invalid input, re-enter again [course code]: ";
