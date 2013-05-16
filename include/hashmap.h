@@ -595,7 +595,7 @@ Hashmap<Key, Value, Hasher, Compare>::Hashmap(Hasher _hash, int _slot, Compare _
 template<typename Key, typename Value, class Hasher, class Compare>
 Hashmap<Key, Value, Hasher, Compare>::Hashmap(const Hashmap<Key, Value, Hasher, Compare>& m)
 :comp(m._comp), arr_bucket(new SortList<Node, _Compare>*[m.slotn]),
- slotn(m.slotn), length(m.length), hashFunctoin(m._hash) {
+ slotn(m.slotn), length(m.length), hashFunctoin(m.hashFunctoin) {
     int i;
     for(i = 0; i < slotn; i++) {
         arr_bucket[i] = new SortList<Node, _Compare>(*(m.arr_bucket[i]));
