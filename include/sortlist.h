@@ -678,12 +678,14 @@ SortList<T, Compare>::~SortList() {
 
 template<typename T, class Compare>
 SortList<T, Compare>::SortList(const SortList<T, Compare>& q)
-:head(new typename SortList<T, Compare>::Node()),
- end(new typename SortList<T, Compare>::Node()),
+:head(new Node()),
+ end(new Node()),
  length(0), comparator(q.comparator) {
     Node *t;
     head->next = end;
     end->prev = head;
+    head->cnt++;
+    end->cnt++;
     for(t = q.head->next; t->next; t = t->next) {
         //Iterate over the list to do deep copy
         insert(*(t->data));
